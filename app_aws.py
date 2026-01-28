@@ -730,7 +730,7 @@ def order_history():
     except ClientError:
         user_orders = []
     
-    return render_template('customer/order_history.html', orders=user_orders)
+    return render_template('customer/orders.html', orders=user_orders)
 
 @app.route('/orders/<order_number>')
 @login_required
