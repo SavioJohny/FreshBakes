@@ -1173,26 +1173,62 @@ def baker_analytics():
             return redirect(url_for('baker_dashboard'))
         bakery = bakeries_list[0]
         
+        # Ensure bakery has required fields
+        if 'rating' not in bakery:
+            bakery['rating'] = 0.0
+        if 'total_reviews' not in bakery:
+            bakery['total_reviews'] = 0
+        
         # Get orders for analytics
         orders_response = orders_table.scan(
             FilterExpression=Attr('bakery_id').eq(bakery['bakery_id'])
         )
         bakery_orders = orders_response.get('Items', [])
         
-        # Calculate basic analytics
+        # Get products count
+        products_response = products_table.scan(
+            FilterExpression=Attr('bakery_id').eq(bakery['bakery_id'])
+        )
+        bakery_products = products_response.get('Items', [])
+        total_products = len(bakery_products)
+        
+        # Calculate analytics
         total_revenue = sum(float(o.get('total_amount', 0)) for o in bakery_orders)
         total_orders = len(bakery_orders)
+        
+        # This month stats
+        this_month = datetime.utcnow().strftime('%Y-%m')
+        this_month_orders_list = [o for o in bakery_orders if o.get('created_at', '').startswith(this_month)]
+        this_month_orders = len(this_month_orders_list)
+        this_month_revenue = sum(float(o.get('total_amount', 0)) for o in this_month_orders_list)
+        
+        # Average order value
+        avg_order_value = total_revenue / total_orders if total_orders > 0 else 0
+        
+        # Top products - simplified (just return empty for now)
+        top_products = []
+        
     except ClientError:
-        bakery = {}
+        bakery = {'rating': 0.0, 'total_reviews': 0}
         bakery_orders = []
         total_revenue = 0
         total_orders = 0
+        this_month_orders = 0
+        this_month_revenue = 0
+        avg_order_value = 0
+        top_products = []
+        total_products = 0
     
     return render_template('baker/analytics.html',
                           bakery=bakery,
                           orders=bakery_orders,
                           total_revenue=total_revenue,
-                          total_orders=total_orders)
+                          total_orders=total_orders,
+                          this_month_orders=this_month_orders,
+                          this_month_revenue=this_month_revenue,
+                          avg_order_value=avg_order_value,
+                          top_products=top_products,
+                          total_products=total_products)
 
 @app.route('/baker/coupons')
 @login_required
