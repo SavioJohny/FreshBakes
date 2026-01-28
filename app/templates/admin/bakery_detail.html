@@ -52,10 +52,9 @@
             <div class="dashboard-section">
                 <h3><i class="fas fa-user" style="color: var(--primary);"></i> Owner Information</h3>
                 <div style="margin-top: var(--space-md);">
-                    <p><strong>Name:</strong> {{ bakery.owner.name }}</p>
-                    <p><strong>Email:</strong> {{ bakery.owner.email }}</p>
-                    <p><strong>Phone:</strong> {{ bakery.owner.phone or 'N/A' }}</p>
-                    <p><strong>Joined:</strong> {{ bakery.owner.created_at.strftime('%b %d, %Y') }}</p>
+                    <hr>
+                    <p><strong>Owner Email:</strong> {{ bakery.owner_email }}</p>
+                    <p><strong>Joined:</strong> {{ bakery.created_at | format_date('%b %d, %Y') }}</p>
                 </div>
             </div>
 
@@ -99,20 +98,20 @@
                 <div style="display: flex; gap: var(--space-md); margin-top: var(--space-md); flex-wrap: wrap;">
                     {% if not bakery.is_approved %}
                     <form action="{{ url_for('admin_approve_bakery', bakery_id=bakery.id) }}" method="POST">
-<button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             <i class="fas fa-check"></i> Approve Bakery
                         </button>
                     </form>
                     <form action="{{ url_for('admin.reject_bakery', bakery_id=bakery.id) }}" method="POST"
                         onsubmit="return confirm('Are you sure you want to reject this bakery?');">
-<button type="submit" class="btn" style="background: var(--danger); color: white;">
+                        <button type="submit" class="btn" style="background: var(--danger); color: white;">
                             <i class="fas fa-times"></i> Reject Bakery
                         </button>
                     </form>
                     {% endif %}
 
                     <form action="{{ url_for('admin.toggle_featured', bakery_id=bakery.id) }}" method="POST">
-<button type="submit" class="btn btn-secondary">
+                        <button type="submit" class="btn btn-secondary">
                             <i class="fas fa-crown"></i> {{ 'Unfeature' if bakery.is_featured else 'Feature' }}
                         </button>
                     </form>

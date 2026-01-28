@@ -29,9 +29,9 @@
                     {% for bakery in bakeries %}
                     <tr>
                         <td><strong>{{ bakery.name }}</strong></td>
-                        <td>{{ bakery.owner.name }}<br><small>{{ bakery.owner.email }}</small></td>
+                        <td>{{ bakery.owner_email }}</td>
                         <td>{{ bakery.city }}</td>
-                        <td>{{ bakery.created_at.strftime('%b %d, %Y') }}</td>
+                        <td>{{ bakery.created_at | format_date('%b %d, %Y') }}</td>
                         <td>
                             <a href="{{ url_for('admin_bakeries', bakery_id=bakery.id) }}"
                                 class="btn btn-secondary btn-sm">
@@ -39,13 +39,13 @@
                             </a>
                             <form action="{{ url_for('admin_approve_bakery', bakery_id=bakery.id) }}" method="POST"
                                 style="display: inline;">
-<button type="submit" class="btn btn-success btn-sm">
+                                <button type="submit" class="btn btn-success btn-sm">
                                     <i class="fas fa-check"></i> Approve
                                 </button>
                             </form>
                             <form action="{{ url_for('admin.reject_bakery', bakery_id=bakery.id) }}" method="POST"
                                 style="display: inline;" onsubmit="return confirm('Reject this bakery application?');">
-<button type="submit" class="btn btn-sm"
+                                <button type="submit" class="btn btn-sm"
                                     style="background: var(--danger); color: white;">
                                     <i class="fas fa-times"></i> Reject
                                 </button>
