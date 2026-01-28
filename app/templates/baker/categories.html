@@ -32,7 +32,7 @@
                     <tr>
                         <td>{{ category.display_order }}</td>
                         <td><strong>{{ category.name }}</strong></td>
-                        <td>{{ category.products.count() }}</td>
+                        <td>{{ category.product_count|default(0) }}</td>
                         <td>
                             <button class="btn btn-secondary btn-sm"
                                 onclick="editCategory({{ category.id }}, '{{ category.name }}')">
