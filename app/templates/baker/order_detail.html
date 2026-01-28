@@ -94,8 +94,7 @@
                     <h3><i class="fas fa-clock"></i> Update Status</h3>
                     <form action="{{ url_for('baker.update_order_status', order_id=order.id) }}" method="POST"
                         style="margin-top: var(--space-md);">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <div class="form-group">
+<div class="form-group">
                             <select name="status" class="form-control">
                                 <option value="pending" {% if order.status=='pending' %}selected{% endif %}>Pending
                                 </option>

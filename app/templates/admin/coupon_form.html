@@ -16,9 +16,7 @@
         <div class="dashboard-content">
             <div class="dashboard-section" style="max-width: 600px;">
                 <form method="POST">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-                    <div class="form-group">
+<div class="form-group">
                         <label for="code">Coupon Code *</label>
                         <input type="text" name="code" class="form-control" required placeholder="e.g., SAVE10"
                             value="{{ coupon.code if coupon else '' }}" style="text-transform: uppercase;">

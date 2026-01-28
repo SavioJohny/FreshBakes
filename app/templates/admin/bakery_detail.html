@@ -99,23 +99,20 @@
                 <div style="display: flex; gap: var(--space-md); margin-top: var(--space-md); flex-wrap: wrap;">
                     {% if not bakery.is_approved %}
                     <form action="{{ url_for('admin_approve_bakery', bakery_id=bakery.id) }}" method="POST">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn btn-primary">
+<button type="submit" class="btn btn-primary">
                             <i class="fas fa-check"></i> Approve Bakery
                         </button>
                     </form>
                     <form action="{{ url_for('admin.reject_bakery', bakery_id=bakery.id) }}" method="POST"
                         onsubmit="return confirm('Are you sure you want to reject this bakery?');">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn" style="background: var(--danger); color: white;">
+<button type="submit" class="btn" style="background: var(--danger); color: white;">
                             <i class="fas fa-times"></i> Reject Bakery
                         </button>
                     </form>
                     {% endif %}
 
                     <form action="{{ url_for('admin.toggle_featured', bakery_id=bakery.id) }}" method="POST">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn btn-secondary">
+<button type="submit" class="btn btn-secondary">
                             <i class="fas fa-crown"></i> {{ 'Unfeature' if bakery.is_featured else 'Feature' }}
                         </button>
                     </form>

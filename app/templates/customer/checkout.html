@@ -12,8 +12,7 @@
 <section class="section">
     <div class="container">
         <form method="POST" class="checkout-layout">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="checkout-main">
+<div class="checkout-main">
                 <!-- Delivery Address -->
                 <div class="checkout-section">
                     <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
@@ -157,8 +156,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token() }}'
-                },
+                    },
                 body: JSON.stringify({
                     code: code,
                     order_amount: subtotal,

@@ -18,9 +18,7 @@
 
         <div class="form-card" style="max-width: 600px;">
             <form method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-                <div class="form-group">
+<div class="form-group">
                     <label for="code">Coupon Code *</label>
                     <input type="text" id="code" name="code" class="form-control" required
                         value="{{ coupon.code if coupon else '' }}" placeholder="e.g., SAVE10"

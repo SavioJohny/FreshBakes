@@ -55,8 +55,7 @@
                         {% if order.status == 'delivered' %}
                         <form action="{{ url_for('orders.reorder', order_number=order.order_number) }}" method="POST"
                             style="display: inline;">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <button type="submit" class="btn btn-secondary btn-sm">
+<button type="submit" class="btn btn-secondary btn-sm">
                                 <i class="fas fa-redo"></i> Reorder
                             </button>
                         </form>

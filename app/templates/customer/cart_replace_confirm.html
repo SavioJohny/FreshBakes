@@ -25,8 +25,7 @@
             </div>
 
             <form action="{{ url_for('add_to_cart') }}" method="POST" style="display: inline;">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="product_id" value="{{ product.id }}">
+<input type="hidden" name="product_id" value="{{ product.id }}">
                 <input type="hidden" name="quantity" value="{{ quantity }}">
                 <input type="hidden" name="replace_cart" value="yes">
                 <button type="submit" class="btn btn-primary">

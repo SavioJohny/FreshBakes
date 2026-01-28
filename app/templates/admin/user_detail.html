@@ -67,8 +67,7 @@
                 <h3><i class="fas fa-cogs" style="color: var(--primary);"></i> Actions</h3>
                 <div style="display: flex; gap: var(--space-md); margin-top: var(--space-md);">
                     <form action="{{ url_for('admin.toggle_user_status', user_id=user.id) }}" method="POST">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit"
+<button type="submit"
                             class="btn {% if user.is_active %}btn-secondary{% else %}btn-primary{% endif %}">
                             <i class="fas fa-{{ 'ban' if user.is_active else 'check' }}"></i>
                             {{ 'Deactivate' if user.is_active else 'Activate' }} User

@@ -102,8 +102,7 @@
                         <div class="approval-actions">
                             <form action="{{ url_for('admin_approve_bakery', bakery_id=bakery.id) }}" method="POST"
                                 style="display:inline;">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="btn btn-success btn-sm"><i
+<button type="submit" class="btn btn-success btn-sm"><i
                                         class="fas fa-check"></i></button>
                             </form>
                             <a href="{{ url_for('admin_bakeries', bakery_id=bakery.id) }}"

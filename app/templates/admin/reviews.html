@@ -42,8 +42,7 @@
                         <td>
                             <form action="{{ url_for('admin.delete_review', review_id=review.id) }}" method="POST"
                                 onsubmit="return confirm('Delete this review?');">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="btn btn-sm"
+<button type="submit" class="btn btn-sm"
                                     style="background: var(--danger); color: white;">
                                     <i class="fas fa-trash"></i>
                                 </button>

@@ -16,9 +16,7 @@
         <div class="dashboard-content">
             <div class="dashboard-section" style="max-width: 500px;">
                 <form method="POST">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-                    <div class="form-group">
+<div class="form-group">
                         <label for="name">Category Name *</label>
                         <input type="text" name="name" class="form-control" required
                             value="{{ category.name if category else '' }}">

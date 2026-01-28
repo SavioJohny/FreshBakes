@@ -56,15 +56,13 @@
                             </a>
                             <form action="{{ url_for('baker.toggle_coupon', coupon_id=coupon.id) }}" method="POST"
                                 style="display: inline;">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="btn btn-secondary btn-sm">
+<button type="submit" class="btn btn-secondary btn-sm">
                                     <i class="fas fa-{% if coupon.is_active %}pause{% else %}play{% endif %}"></i>
                                 </button>
                             </form>
                             <form action="{{ url_for('baker.delete_coupon', coupon_id=coupon.id) }}" method="POST"
                                 style="display: inline;" onsubmit="return confirm('Delete this coupon?');">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="btn btn-sm"
+<button type="submit" class="btn btn-sm"
                                     style="background: var(--danger); color: white;">
                                     <i class="fas fa-trash"></i>
                                 </button>

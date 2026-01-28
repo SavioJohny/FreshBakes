@@ -109,8 +109,7 @@
                                     {% if product.stock_quantity > 0 and bakery.is_open %}
                                     <form action="{{ url_for('add_to_cart') }}" method="POST"
                                         class="add-to-cart-form">
-                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                        <input type="hidden" name="product_id" value="{{ product.id }}">
+<input type="hidden" name="product_id" value="{{ product.id }}">
                                         <input type="hidden" name="quantity" value="1">
                                         <button type="submit" class="btn btn-primary btn-sm">
                                             <i class="fas fa-plus"></i> Add
@@ -149,8 +148,7 @@
                                     {% if product.stock_quantity > 0 and bakery.is_open %}
                                     <form action="{{ url_for('add_to_cart') }}" method="POST"
                                         class="add-to-cart-form">
-                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                        <input type="hidden" name="product_id" value="{{ product.id }}">
+<input type="hidden" name="product_id" value="{{ product.id }}">
                                         <input type="hidden" name="quantity" value="1">
                                         <button type="submit" class="btn btn-primary btn-sm">
                                             <i class="fas fa-plus"></i> Add

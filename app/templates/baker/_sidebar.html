@@ -43,8 +43,7 @@
     </nav>
     <div class="sidebar-footer">
         <form action="{{ url_for('baker.toggle_status') }}" method="POST">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit"
+<button type="submit"
                 class="btn {% if bakery.is_open %}btn-danger{% else %}btn-success{% endif %} btn-block">
                 <i class="fas fa-power-off"></i>
                 {{ 'Close Shop' if bakery.is_open else 'Open Shop' }}

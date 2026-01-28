@@ -33,8 +33,7 @@
                 {% if not message.is_read %}
                 <form action="{{ url_for('admin.mark_message_read', message_id=message.id) }}" method="POST"
                     style="margin-top: var(--space-md);">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-secondary btn-sm">
+<button type="submit" class="btn btn-secondary btn-sm">
                         <i class="fas fa-check"></i> Mark as Read
                     </button>
                 </form>

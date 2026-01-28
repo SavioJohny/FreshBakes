@@ -51,8 +51,7 @@
                 {% else %}
                 <form action="{{ url_for('baker.reply_review', review_id=review.id) }}" method="POST"
                     style="margin-top: var(--space-md);">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <div class="form-group" style="margin-bottom: var(--space-sm);">
+<div class="form-group" style="margin-bottom: var(--space-sm);">
                         <textarea name="reply" class="form-control" rows="2"
                             placeholder="Write a response..."></textarea>
                     </div>

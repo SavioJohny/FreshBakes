@@ -62,8 +62,7 @@
                             <form action="{{ url_for('baker.delete_product', product_id=product.id) }}" method="POST"
                                 style="display: inline;"
                                 onsubmit="return confirm('Are you sure you want to delete this product?');">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="btn btn-sm"
+<button type="submit" class="btn btn-sm"
                                     style="background: var(--danger); color: white;">
                                     <i class="fas fa-trash"></i>
                                 </button>

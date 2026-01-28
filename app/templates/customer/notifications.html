@@ -9,8 +9,7 @@
             <h1><i class="fas fa-bell"></i> Notifications</h1>
             {% if notifications %}
             <form action="{{ url_for('customer.mark_notifications_read') }}" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" class="btn btn-secondary btn-sm">
+<button type="submit" class="btn btn-secondary btn-sm">
                     <i class="fas fa-check-double"></i> Mark All Read
                 </button>
             </form>

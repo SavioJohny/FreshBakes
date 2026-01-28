@@ -20,9 +20,7 @@
             </div>
 
             <form method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-                <div class="form-group">
+<div class="form-group">
                     <label>Rating *</label>
                     <div class="star-rating" style="display: flex; gap: var(--space-sm); font-size: 2rem;">
                         {% for i in range(5, 0, -1) %}
