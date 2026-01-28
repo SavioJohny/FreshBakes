@@ -5,31 +5,31 @@
         <h3>Admin Panel</h3>
     </div>
     <nav class="sidebar-nav">
-        <a href="{{ url_for('admin.dashboard') }}"
+        <a href="{{ url_for('admin_dashboard') }}"
             class="nav-item {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
             <i class="fas fa-tachometer-alt"></i> Dashboard
         </a>
-        <a href="{{ url_for('admin.pending_approvals') }}"
+        <a href="{{ url_for('admin_bakeries') }}"
             class="nav-item {% if 'pending' in request.endpoint %}active{% endif %}">
             <i class="fas fa-user-check"></i> Approvals
             {% if pending_count and pending_count > 0 %}<span class="badge">{{ pending_count }}</span>{% endif %}
         </a>
-        <a href="{{ url_for('admin.bakeries') }}"
+        <a href="{{ url_for('admin_bakeries') }}"
             class="nav-item {% if request.endpoint == 'admin.bakeries' %}active{% endif %}">
             <i class="fas fa-store"></i> Bakeries
         </a>
-        <a href="{{ url_for('admin.users') }}" class="nav-item {% if 'user' in request.endpoint %}active{% endif %}">
+        <a href="{{ url_for('admin_users') }}" class="nav-item {% if 'user' in request.endpoint %}active{% endif %}">
             <i class="fas fa-users"></i> Users
         </a>
-        <a href="{{ url_for('admin.orders') }}"
+        <a href="{{ url_for('admin_orders') }}"
             class="nav-item {% if request.endpoint == 'admin.orders' %}active{% endif %}">
             <i class="fas fa-box"></i> Orders
         </a>
-        <a href="{{ url_for('admin.reviews') }}"
+        <a href="{{ url_for('admin_dashboard') }}"
             class="nav-item {% if request.endpoint == 'admin.reviews' %}active{% endif %}">
             <i class="fas fa-star"></i> Reviews
         </a>
-        <a href="{{ url_for('admin.coupons') }}"
+        <a href="{{ url_for('admin_dashboard') }}"
             class="nav-item {% if request.endpoint == 'admin.coupons' %}active{% endif %}">
             <i class="fas fa-percent"></i> Coupons
         </a>

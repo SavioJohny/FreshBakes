@@ -11,7 +11,7 @@
     <main class="dashboard-main">
         <div class="dashboard-header">
             <h1>{% if coupon %}Edit Coupon{% else %}Create Coupon{% endif %}</h1>
-            <a href="{{ url_for('baker.coupons') }}" class="btn btn-secondary">
+            <a href="{{ url_for('baker_dashboard') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Back to Coupons
             </a>
         </div>

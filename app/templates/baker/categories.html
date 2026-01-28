@@ -68,7 +68,7 @@
     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
     <div style="background: white; padding: var(--space-xl); border-radius: var(--radius-lg); width: 400px;">
         <h3 style="margin-bottom: var(--space-lg);">Add Category</h3>
-        <form action="{{ url_for('baker.add_category') }}" method="POST">
+        <form action="{{ url_for('baker_products') }}" method="POST">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label>Category Name *</label>

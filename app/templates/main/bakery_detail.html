@@ -107,7 +107,7 @@
                                         <span class="price-current">₹{{ '%.0f'|format(product.current_price) }}</span>
                                     </div>
                                     {% if product.stock_quantity > 0 and bakery.is_open %}
-                                    <form action="{{ url_for('cart.add_to_cart') }}" method="POST"
+                                    <form action="{{ url_for('add_to_cart') }}" method="POST"
                                         class="add-to-cart-form">
                                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <input type="hidden" name="product_id" value="{{ product.id }}">
@@ -147,7 +147,7 @@
                                         <span class="price-current">₹{{ '%.0f'|format(product.current_price) }}</span>
                                     </div>
                                     {% if product.stock_quantity > 0 and bakery.is_open %}
-                                    <form action="{{ url_for('cart.add_to_cart') }}" method="POST"
+                                    <form action="{{ url_for('add_to_cart') }}" method="POST"
                                         class="add-to-cart-form">
                                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <input type="hidden" name="product_id" value="{{ product.id }}">

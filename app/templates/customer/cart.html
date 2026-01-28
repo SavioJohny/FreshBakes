@@ -19,7 +19,7 @@
                     <div class="cart-bakery-header">
                         <h3>
                             <i class="fas fa-store"></i>
-                            <a href="{{ url_for('main.bakery_detail', slug=bakery_data.bakery.slug) }}">
+                            <a href="{{ url_for('bakery_detail', slug=bakery_data.bakery.slug) }}">
                                 {{ bakery_data.bakery.name }}
                             </a>
                         </h3>
@@ -40,7 +40,7 @@
                             {% endif %}
                         </div>
                         <div class="cart-item-quantity">
-                            <form action="{{ url_for('cart.update_cart') }}" method="POST" class="quantity-form">
+                            <form action="{{ url_for('update_cart') }}" method="POST" class="quantity-form">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="item_id" value="{{ item.id }}">
                                 <button type="button" class="qty-btn qty-minus" onclick="updateQuantity(this, -1)">
@@ -56,7 +56,7 @@
                         <div class="cart-item-subtotal">
                             <span class="subtotal">₹{{ '%.0f'|format(item.subtotal) }}</span>
                         </div>
-                        <form action="{{ url_for('cart.remove_from_cart', item_id=item.id) }}" method="POST">
+                        <form action="{{ url_for('remove_from_cart', item_id=item.id) }}" method="POST">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit" class="btn-remove" title="Remove">
                                 <i class="fas fa-trash"></i>
@@ -89,10 +89,10 @@
                         <span>Total</span>
                         <span>₹{{ '%.0f'|format(cart_total) }}+</span>
                     </div>
-                    <a href="{{ url_for('orders.checkout') }}" class="btn btn-primary btn-block btn-lg">
+                    <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-block btn-lg">
                         <i class="fas fa-arrow-right"></i> Proceed to Checkout
                     </a>
-                    <a href="{{ url_for('main.bakeries') }}" class="btn btn-secondary btn-block">
+                    <a href="{{ url_for('bakeries_list') }}" class="btn btn-secondary btn-block">
                         <i class="fas fa-store"></i> Continue Shopping
                     </a>
                 </div>
@@ -103,7 +103,7 @@
             <i class="fas fa-shopping-cart"></i>
             <h3>Your cart is empty</h3>
             <p>Looks like you haven't added any items yet.</p>
-            <a href="{{ url_for('main.bakeries') }}" class="btn btn-primary">
+            <a href="{{ url_for('bakeries_list') }}" class="btn btn-primary">
                 <i class="fas fa-store"></i> Browse Bakeries
             </a>
         </div>

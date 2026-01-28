@@ -18,29 +18,29 @@
             </span>
         </div>
         <nav class="sidebar-nav">
-            <a href="{{ url_for('baker.dashboard') }}" class="nav-item active">
+            <a href="{{ url_for('baker_dashboard') }}" class="nav-item active">
                 <i class="fas fa-tachometer-alt"></i> Dashboard
             </a>
-            <a href="{{ url_for('baker.orders') }}" class="nav-item">
+            <a href="{{ url_for('baker_orders') }}" class="nav-item">
                 <i class="fas fa-box"></i> Orders
                 {% if pending_orders %}<span class="badge">{{ pending_orders|length }}</span>{% endif %}
             </a>
-            <a href="{{ url_for('baker.products') }}" class="nav-item">
+            <a href="{{ url_for('baker_products') }}" class="nav-item">
                 <i class="fas fa-bread-slice"></i> Products
             </a>
-            <a href="{{ url_for('baker.categories') }}" class="nav-item">
+            <a href="{{ url_for('baker_products') }}" class="nav-item">
                 <i class="fas fa-tags"></i> Categories
             </a>
-            <a href="{{ url_for('baker.reviews') }}" class="nav-item">
+            <a href="{{ url_for('baker_dashboard') }}" class="nav-item">
                 <i class="fas fa-star"></i> Reviews
             </a>
-            <a href="{{ url_for('baker.analytics') }}" class="nav-item">
+            <a href="{{ url_for('baker_dashboard') }}" class="nav-item">
                 <i class="fas fa-chart-line"></i> Analytics
             </a>
-            <a href="{{ url_for('baker.coupons') }}" class="nav-item">
+            <a href="{{ url_for('baker_dashboard') }}" class="nav-item">
                 <i class="fas fa-percent"></i> Coupons
             </a>
-            <a href="{{ url_for('baker.profile') }}" class="nav-item">
+            <a href="{{ url_for('baker_dashboard') }}" class="nav-item">
                 <i class="fas fa-cog"></i> Settings
             </a>
         </nav>
@@ -100,7 +100,7 @@
         <div class="dashboard-section">
             <div class="section-header">
                 <h2><i class="fas fa-clock"></i> Pending Orders</h2>
-                <a href="{{ url_for('baker.orders') }}">View All</a>
+                <a href="{{ url_for('baker_orders') }}">View All</a>
             </div>
             <div class="orders-table">
                 <table>
@@ -124,7 +124,7 @@
                             <td><span class="status-badge status-{{ order.status }}">{{ order.status.title() }}</span>
                             </td>
                             <td>
-                                <a href="{{ url_for('baker.order_detail', order_id=order.id) }}"
+                                <a href="{{ url_for('baker_orders', order_id=order.id) }}"
                                     class="btn btn-sm btn-primary">
                                     View
                                 </a>
@@ -157,7 +157,7 @@
                     <tbody>
                         {% for order in recent_orders %}
                         <tr>
-                            <td><a href="{{ url_for('baker.order_detail', order_id=order.id) }}">{{ order.order_number
+                            <td><a href="{{ url_for('baker_orders', order_id=order.id) }}">{{ order.order_number
                                     }}</a></td>
                             <td>{{ order.customer.name }}</td>
                             <td>₹{{ '%.0f'|format(order.total_amount) }}</td>

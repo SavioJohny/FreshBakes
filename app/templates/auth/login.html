@@ -8,7 +8,7 @@
 <div class="auth-container">
     <div class="auth-card">
         <div class="auth-header">
-            <a href="{{ url_for('main.index') }}" class="auth-logo">
+            <a href="{{ url_for('index') }}" class="auth-logo">
                 <i class="fas fa-bread-slice"></i>
                 <span>Local Crust</span>
             </a>
@@ -54,9 +54,9 @@
         </form>
 
         <div class="auth-footer">
-            <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Sign Up</a></p>
+            <p>Don't have an account? <a href="{{ url_for('register') }}">Sign Up</a></p>
             <p class="auth-divider"><span>or</span></p>
-            <p>Want to sell? <a href="{{ url_for('auth.register_baker') }}">Register as Baker</a></p>
+            <p>Want to sell? <a href="{{ url_for('register_baker') }}">Register as Baker</a></p>
         </div>
     </div>
 </div>

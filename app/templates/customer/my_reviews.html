@@ -19,7 +19,7 @@
                     style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
                     <div>
                         <h4 style="margin: 0 0 var(--space-xs) 0;">
-                            <a href="{{ url_for('main.bakery_detail', slug=review.bakery.slug) }}"
+                            <a href="{{ url_for('bakery_detail', slug=review.bakery.slug) }}"
                                 style="color: var(--primary); text-decoration: none;">
                                 {{ review.bakery.name }}
                             </a>
@@ -53,7 +53,7 @@
 
                 <div
                     style="display: flex; justify-content: space-between; align-items: center; padding-top: var(--space-md); border-top: 1px solid var(--gray-200);">
-                    <a href="{{ url_for('orders.order_detail', order_number=review.order.order_number) }}"
+                    <a href="{{ url_for('order_detail', order_number=review.order.order_number) }}"
                         class="btn btn-secondary btn-sm">
                         <i class="fas fa-box"></i> View Order
                     </a>
@@ -74,7 +74,7 @@
             <h3 style="margin: 0 0 var(--space-sm) 0;">No reviews yet</h3>
             <p style="color: var(--gray-600); margin: 0 0 var(--space-lg) 0;">You haven't written any reviews yet. Order
                 from a bakery and share your experience!</p>
-            <a href="{{ url_for('main.bakeries') }}" class="btn btn-primary">
+            <a href="{{ url_for('bakeries_list') }}" class="btn btn-primary">
                 <i class="fas fa-store"></i> Browse Bakeries
             </a>
         </div>

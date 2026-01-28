@@ -44,7 +44,7 @@
         <!-- Results -->
         <div class="bakery-grid">
             {% for bakery in bakeries %}
-            <a href="{{ url_for('main.bakery_detail', slug=bakery.slug) }}" class="bakery-card">
+            <a href="{{ url_for('bakery_detail', slug=bakery.slug) }}" class="bakery-card">
                 <div class="bakery-image">
                     <img src="{{ url_for('static', filename='images/' ~ bakery.logo_url) }}" alt="{{ bakery.name }}"
                         onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
@@ -77,7 +77,7 @@
                 <i class="fas fa-search"></i>
                 <h3>No bakeries found</h3>
                 <p>Try adjusting your search or filters</p>
-                <a href="{{ url_for('main.bakeries') }}" class="btn btn-primary">Clear Filters</a>
+                <a href="{{ url_for('bakeries_list') }}" class="btn btn-primary">Clear Filters</a>
             </div>
             {% endfor %}
         </div>

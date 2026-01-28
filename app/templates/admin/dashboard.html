@@ -13,26 +13,26 @@
             <h3>Admin Panel</h3>
         </div>
         <nav class="sidebar-nav">
-            <a href="{{ url_for('admin.dashboard') }}" class="nav-item active">
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item active">
                 <i class="fas fa-tachometer-alt"></i> Dashboard
             </a>
-            <a href="{{ url_for('admin.pending_approvals') }}" class="nav-item">
+            <a href="{{ url_for('admin_bakeries') }}" class="nav-item">
                 <i class="fas fa-user-check"></i> Approvals
                 {% if pending_bakeries > 0 %}<span class="badge">{{ pending_bakeries }}</span>{% endif %}
             </a>
-            <a href="{{ url_for('admin.bakeries') }}" class="nav-item">
+            <a href="{{ url_for('admin_bakeries') }}" class="nav-item">
                 <i class="fas fa-store"></i> Bakeries
             </a>
-            <a href="{{ url_for('admin.users') }}" class="nav-item">
+            <a href="{{ url_for('admin_users') }}" class="nav-item">
                 <i class="fas fa-users"></i> Users
             </a>
-            <a href="{{ url_for('admin.orders') }}" class="nav-item">
+            <a href="{{ url_for('admin_orders') }}" class="nav-item">
                 <i class="fas fa-box"></i> Orders
             </a>
-            <a href="{{ url_for('admin.reviews') }}" class="nav-item">
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
                 <i class="fas fa-star"></i> Reviews
             </a>
-            <a href="{{ url_for('admin.coupons') }}" class="nav-item">
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
                 <i class="fas fa-percent"></i> Coupons
             </a>
             <a href="{{ url_for('admin.messages') }}" class="nav-item">
@@ -89,7 +89,7 @@
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2><i class="fas fa-user-clock"></i> Pending Approvals</h2>
-                    <a href="{{ url_for('admin.pending_approvals') }}">View All</a>
+                    <a href="{{ url_for('admin_bakeries') }}">View All</a>
                 </div>
                 {% if pending_approvals %}
                 <div class="approval-list">
@@ -100,13 +100,13 @@
                             <span>{{ bakery.city }} • {{ bakery.created_at.strftime('%b %d') }}</span>
                         </div>
                         <div class="approval-actions">
-                            <form action="{{ url_for('admin.approve_bakery', bakery_id=bakery.id) }}" method="POST"
+                            <form action="{{ url_for('admin_approve_bakery', bakery_id=bakery.id) }}" method="POST"
                                 style="display:inline;">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="btn btn-success btn-sm"><i
                                         class="fas fa-check"></i></button>
                             </form>
-                            <a href="{{ url_for('admin.bakery_detail', bakery_id=bakery.id) }}"
+                            <a href="{{ url_for('admin_bakeries', bakery_id=bakery.id) }}"
                                 class="btn btn-secondary btn-sm">
                                 <i class="fas fa-eye"></i>
                             </a>
@@ -149,7 +149,7 @@
         <div class="dashboard-section">
             <div class="section-header">
                 <h2><i class="fas fa-history"></i> Recent Orders</h2>
-                <a href="{{ url_for('admin.orders') }}">View All</a>
+                <a href="{{ url_for('admin_orders') }}">View All</a>
             </div>
             <div class="orders-table">
                 <table>

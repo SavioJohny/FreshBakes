@@ -128,7 +128,7 @@
 
             <!-- Actions -->
             <div style="display: flex; gap: var(--space-md);">
-                <a href="{{ url_for('orders.order_history') }}" class="btn btn-secondary">
+                <a href="{{ url_for('order_history') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Back to Orders
                 </a>
                 {% if order.status == 'delivered' and not order.review %}

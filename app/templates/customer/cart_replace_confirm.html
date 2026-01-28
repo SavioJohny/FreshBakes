@@ -24,7 +24,7 @@
                 <p style="color: var(--gray-600); margin: var(--space-xs) 0 0;">from {{ product.bakery.name }}</p>
             </div>
 
-            <form action="{{ url_for('cart.add_to_cart') }}" method="POST" style="display: inline;">
+            <form action="{{ url_for('add_to_cart') }}" method="POST" style="display: inline;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="product_id" value="{{ product.id }}">
                 <input type="hidden" name="quantity" value="{{ quantity }}">
@@ -33,7 +33,7 @@
                     <i class="fas fa-trash-alt"></i> Replace Cart
                 </button>
             </form>
-            <a href="{{ url_for('cart.view_cart') }}" class="btn btn-secondary" style="margin-left: var(--space-sm);">
+            <a href="{{ url_for('view_cart') }}" class="btn btn-secondary" style="margin-left: var(--space-sm);">
                 <i class="fas fa-shopping-cart"></i> Keep Current Cart
             </a>
         </div>

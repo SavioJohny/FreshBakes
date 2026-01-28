@@ -35,14 +35,14 @@
                         </label>
                         {% endfor %}
                     </div>
-                    <a href="{{ url_for('customer.add_address') }}?next={{ url_for('orders.checkout') }}"
+                    <a href="{{ url_for('add_address') }}?next={{ url_for('checkout') }}"
                         class="btn btn-secondary btn-sm">
                         <i class="fas fa-plus"></i> Add New Address
                     </a>
                     {% else %}
                     <div class="no-address">
                         <p>No delivery addresses found. Please add one to continue.</p>
-                        <a href="{{ url_for('customer.add_address') }}?next={{ url_for('orders.checkout') }}"
+                        <a href="{{ url_for('add_address') }}?next={{ url_for('checkout') }}"
                             class="btn btn-primary">
                             <i class="fas fa-plus"></i> Add Address
                         </a>

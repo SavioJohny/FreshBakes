@@ -9,7 +9,7 @@
         <h1>Fresh Artisan Bakes,<br>Delivered to Your Door</h1>
         <p>Discover local bakeries crafting delicious breads, pastries, and cakes with love and tradition.</p>
         <div class="hero-search">
-            <form action="{{ url_for('main.bakeries') }}" method="GET">
+            <form action="{{ url_for('bakeries_list') }}" method="GET">
                 <input type="text" name="search" placeholder="Search for bakeries or treats...">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-search"></i> Search
@@ -42,11 +42,11 @@
     <div class="container">
         <div class="section-header">
             <h2><i class="fas fa-star"></i> Featured Bakeries</h2>
-            <a href="{{ url_for('main.bakeries') }}" class="link-arrow">View All <i class="fas fa-arrow-right"></i></a>
+            <a href="{{ url_for('bakeries_list') }}" class="link-arrow">View All <i class="fas fa-arrow-right"></i></a>
         </div>
         <div class="bakery-grid">
             {% for bakery in featured_bakeries %}
-            <a href="{{ url_for('main.bakery_detail', slug=bakery.slug) }}" class="bakery-card featured">
+            <a href="{{ url_for('bakery_detail', slug=bakery.slug) }}" class="bakery-card featured">
                 <div class="bakery-image">
                     <img src="{{ url_for('static', filename='images/' ~ bakery.logo_url) }}" alt="{{ bakery.name }}"
                         onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
@@ -74,27 +74,27 @@
     <div class="container">
         <h2 class="text-center">What are you craving?</h2>
         <div class="category-grid">
-            <a href="{{ url_for('main.bakeries') }}?search=bread" class="category-card">
+            <a href="{{ url_for('bakeries_list') }}?search=bread" class="category-card">
                 <div class="category-icon"><i class="fas fa-bread-slice"></i></div>
                 <span>Breads</span>
             </a>
-            <a href="{{ url_for('main.bakeries') }}?search=cake" class="category-card">
+            <a href="{{ url_for('bakeries_list') }}?search=cake" class="category-card">
                 <div class="category-icon"><i class="fas fa-birthday-cake"></i></div>
                 <span>Cakes</span>
             </a>
-            <a href="{{ url_for('main.bakeries') }}?search=pastry" class="category-card">
+            <a href="{{ url_for('bakeries_list') }}?search=pastry" class="category-card">
                 <div class="category-icon"><i class="fas fa-cookie-bite"></i></div>
                 <span>Pastries</span>
             </a>
-            <a href="{{ url_for('main.bakeries') }}?search=cookie" class="category-card">
+            <a href="{{ url_for('bakeries_list') }}?search=cookie" class="category-card">
                 <div class="category-icon"><i class="fas fa-cookie"></i></div>
                 <span>Cookies</span>
             </a>
-            <a href="{{ url_for('main.bakeries') }}?search=cupcake" class="category-card">
+            <a href="{{ url_for('bakeries_list') }}?search=cupcake" class="category-card">
                 <div class="category-icon"><i class="fas fa-ice-cream"></i></div>
                 <span>Cupcakes</span>
             </a>
-            <a href="{{ url_for('main.bakeries') }}?search=donut" class="category-card">
+            <a href="{{ url_for('bakeries_list') }}?search=donut" class="category-card">
                 <div class="category-icon"><i class="fas fa-circle"></i></div>
                 <span>Donuts</span>
             </a>
@@ -107,11 +107,11 @@
     <div class="container">
         <div class="section-header">
             <h2><i class="fas fa-store"></i> Popular Bakeries</h2>
-            <a href="{{ url_for('main.bakeries') }}" class="link-arrow">View All <i class="fas fa-arrow-right"></i></a>
+            <a href="{{ url_for('bakeries_list') }}" class="link-arrow">View All <i class="fas fa-arrow-right"></i></a>
         </div>
         <div class="bakery-grid">
             {% for bakery in bakeries %}
-            <a href="{{ url_for('main.bakery_detail', slug=bakery.slug) }}" class="bakery-card">
+            <a href="{{ url_for('bakery_detail', slug=bakery.slug) }}" class="bakery-card">
                 <div class="bakery-image">
                     <img src="{{ url_for('static', filename='images/' ~ bakery.logo_url) }}" alt="{{ bakery.name }}"
                         onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
@@ -137,7 +137,7 @@
                 <i class="fas fa-store-slash"></i>
                 <h3>No bakeries yet</h3>
                 <p>Be the first to join our platform!</p>
-                <a href="{{ url_for('auth.register_baker') }}" class="btn btn-primary">Register Your Bakery</a>
+                <a href="{{ url_for('register_baker') }}" class="btn btn-primary">Register Your Bakery</a>
             </div>
             {% endfor %}
         </div>
@@ -173,7 +173,7 @@
                         {% endif %}
                         <span class="price-current">₹{{ '%.0f'|format(product.current_price) }}</span>
                     </div>
-                    <a href="{{ url_for('main.bakery_detail', slug=product.bakery.slug) }}"
+                    <a href="{{ url_for('bakery_detail', slug=product.bakery.slug) }}"
                         class="btn btn-secondary btn-sm">View Bakery</a>
                 </div>
             </div>
@@ -189,7 +189,7 @@
         <div class="cta-content">
             <h2>Are you an Artisan Baker?</h2>
             <p>Join Local Crust and reach thousands of customers who love fresh, handmade bakery products.</p>
-            <a href="{{ url_for('main.become_baker') }}" class="btn btn-light btn-lg">
+            <a href="{{ url_for('become_baker') }}" class="btn btn-light btn-lg">
                 <i class="fas fa-store"></i> Partner with Us
             </a>
         </div>

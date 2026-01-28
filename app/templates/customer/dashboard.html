@@ -37,13 +37,13 @@
         <div class="dashboard-section" style="margin-top: var(--space-2xl);">
             <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
             <div style="display: flex; gap: var(--space-md); margin-top: var(--space-lg); flex-wrap: wrap;">
-                <a href="{{ url_for('main.bakeries') }}" class="btn btn-primary">
+                <a href="{{ url_for('bakeries_list') }}" class="btn btn-primary">
                     <i class="fas fa-store"></i> Browse Bakeries
                 </a>
-                <a href="{{ url_for('orders.order_history') }}" class="btn btn-secondary">
+                <a href="{{ url_for('order_history') }}" class="btn btn-secondary">
                     <i class="fas fa-history"></i> Order History
                 </a>
-                <a href="{{ url_for('customer.profile') }}" class="btn btn-secondary">
+                <a href="{{ url_for('profile') }}" class="btn btn-secondary">
                     <i class="fas fa-user"></i> Profile
                 </a>
             </div>
@@ -54,7 +54,7 @@
         <div class="dashboard-section" style="margin-top: var(--space-2xl);">
             <div class="section-header">
                 <h3><i class="fas fa-clock"></i> Recent Orders</h3>
-                <a href="{{ url_for('orders.order_history') }}" class="link-arrow">View All <i
+                <a href="{{ url_for('order_history') }}" class="link-arrow">View All <i
                         class="fas fa-arrow-right"></i></a>
             </div>
             <div class="orders-list">
@@ -73,7 +73,7 @@
                     </div>
                     <div class="order-footer">
                         <span class="order-total">₹{{ '%.0f'|format(order.total_amount) }}</span>
-                        <a href="{{ url_for('orders.order_detail', order_number=order.order_number) }}"
+                        <a href="{{ url_for('order_detail', order_number=order.order_number) }}"
                             class="btn btn-secondary btn-sm">
                             View Details
                         </a>
