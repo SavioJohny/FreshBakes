@@ -60,6 +60,36 @@ def send_notification(subject, message):
     except ClientError as e:
         print(f"Error sending notification: {e}")
 
+@app.template_filter('format_decimal')
+def format_decimal_filter(value, decimals=2):
+    """Format Decimal/float for display in templates."""
+    try:
+        # Helper to convert Decimal to float for formatting, if needed
+        def decimal_to_float(d):
+            if isinstance(d, Decimal):
+                return float(d)
+            return d
+        return f"{decimal_to_float(value):.{decimals}f}"
+    except:
+        return "0.00"
+
+@app.template_filter('format_date')
+def format_date_filter(value, format='%b %d, %Y'):
+    """Format date string or datetime object."""
+    if not value:
+        return ''
+    if isinstance(value, str):
+        try:
+            # Handle ISO format
+            if 'T' in value:
+                value = datetime.fromisoformat(value)
+            else:
+                # Try simple date format
+                value = datetime.strptime(value, '%Y-%m-%d')
+        except ValueError:
+            return value
+    return value.strftime(format)
+
 def generate_slug(name):
     """Generate a URL-friendly slug from name."""
     slug = name.lower().replace(' ', '-')
