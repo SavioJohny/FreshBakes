@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}Baker Dashboard{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <img src="{{ url_for('static', filename='images/' ~ bakery.logo_url) }}" alt="{{ bakery.name }}"
+                class="bakery-avatar"
+                onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
+            <h3>{{ bakery.name }}</h3>
+            <span class="status-badge {% if bakery.is_open %}open{% else %}closed{% endif %}">
+                {{ 'Open' if bakery.is_open else 'Closed' }}
+            </span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('baker.dashboard') }}" class="nav-item active">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="{{ url_for('baker.orders') }}" class="nav-item">
+                <i class="fas fa-box"></i> Orders
+                {% if pending_orders %}<span class="badge">{{ pending_orders|length }}</span>{% endif %}
+            </a>
+            <a href="{{ url_for('baker.products') }}" class="nav-item">
+                <i class="fas fa-bread-slice"></i> Products
+            </a>
+            <a href="{{ url_for('baker.categories') }}" class="nav-item">
+                <i class="fas fa-tags"></i> Categories
+            </a>
+            <a href="{{ url_for('baker.reviews') }}" class="nav-item">
+                <i class="fas fa-star"></i> Reviews
+            </a>
+            <a href="{{ url_for('baker.analytics') }}" class="nav-item">
+                <i class="fas fa-chart-line"></i> Analytics
+            </a>
+            <a href="{{ url_for('baker.coupons') }}" class="nav-item">
+                <i class="fas fa-percent"></i> Coupons
+            </a>
+            <a href="{{ url_for('baker.profile') }}" class="nav-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <form action="{{ url_for('baker.toggle_status') }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit"
+                    class="btn {% if bakery.is_open %}btn-danger{% else %}btn-success{% endif %} btn-block">
+                    <i class="fas fa-power-off"></i>
+                    {{ 'Close Shop' if bakery.is_open else 'Open Shop' }}
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+            <p>Welcome back, {{ current_user.name }}!</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon orders"><i class="fas fa-box"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ today_orders }}</span>
+                    <span class="stat-label">Today's Orders</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon revenue"><i class="fas fa-rupee-sign"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">₹{{ '%.0f'|format(today_revenue) }}</span>
+                    <span class="stat-label">Today's Revenue</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon products"><i class="fas fa-bread-slice"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ total_products }}</span>
+                    <span class="stat-label">Total Products</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon total"><i class="fas fa-shopping-cart"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ total_orders }}</span>
+                    <span class="stat-label">Total Orders</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Orders -->
+        {% if pending_orders %}
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2><i class="fas fa-clock"></i> Pending Orders</h2>
+                <a href="{{ url_for('baker.orders') }}">View All</a>
+            </div>
+            <div class="orders-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in pending_orders %}
+                        <tr>
+                            <td><strong>{{ order.order_number }}</strong></td>
+                            <td>{{ order.customer.name }}</td>
+                            <td>{{ order.items.count() }} items</td>
+                            <td>₹{{ '%.0f'|format(order.total_amount) }}</td>
+                            <td><span class="status-badge status-{{ order.status }}">{{ order.status.title() }}</span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('baker.order_detail', order_id=order.id) }}"
+                                    class="btn btn-sm btn-primary">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recent Orders -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2><i class="fas fa-history"></i> Recent Orders</h2>
+            </div>
+            {% if recent_orders %}
+            <div class="orders-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in recent_orders %}
+                        <tr>
+                            <td><a href="{{ url_for('baker.order_detail', order_id=order.id) }}">{{ order.order_number
+                                    }}</a></td>
+                            <td>{{ order.customer.name }}</td>
+                            <td>₹{{ '%.0f'|format(order.total_amount) }}</td>
+                            <td><span class="status-badge status-{{ order.status }}">{{ order.status.replace('_', '
+                                    ').title() }}</span></td>
+                            <td>{{ order.created_at.strftime('%b %d, %I:%M %p') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No orders yet.</p>
+            {% endif %}
+        </div>
+    </main>
+</div>
+{% endblock %}

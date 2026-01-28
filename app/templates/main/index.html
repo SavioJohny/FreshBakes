@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Fresh Artisan Bakes,<br>Delivered to Your Door</h1>
+        <p>Discover local bakeries crafting delicious breads, pastries, and cakes with love and tradition.</p>
+        <div class="hero-search">
+            <form action="{{ url_for('main.bakeries') }}" method="GET">
+                <input type="text" name="search" placeholder="Search for bakeries or treats...">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Artisan Bakeries</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">500+</span>
+                <span class="stat-label">Fresh Products</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">10K+</span>
+                <span class="stat-label">Happy Customers</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-image">
+        <div class="hero-blob"></div>
+    </div>
+</section>
+
+<!-- Featured Bakeries -->
+{% if featured_bakeries %}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2><i class="fas fa-star"></i> Featured Bakeries</h2>
+            <a href="{{ url_for('main.bakeries') }}" class="link-arrow">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="bakery-grid">
+            {% for bakery in featured_bakeries %}
+            <a href="{{ url_for('main.bakery_detail', slug=bakery.slug) }}" class="bakery-card featured">
+                <div class="bakery-image">
+                    <img src="{{ url_for('static', filename='images/' ~ bakery.logo_url) }}" alt="{{ bakery.name }}"
+                        onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
+                    <span class="badge badge-featured"><i class="fas fa-crown"></i> Featured</span>
+                </div>
+                <div class="bakery-info">
+                    <h3>{{ bakery.name }}</h3>
+                    <p class="bakery-description">{{ bakery.description[:80] }}{% if bakery.description|length > 80
+                        %}...{% endif %}</p>
+                    <div class="bakery-meta">
+                        <span class="rating"><i class="fas fa-star"></i> {{ '%.1f'|format(bakery.rating) }}</span>
+                        <span class="delivery"><i class="fas fa-clock"></i> {{ bakery.delivery_time_mins }} mins</span>
+                        <span class="location"><i class="fas fa-map-marker-alt"></i> {{ bakery.city }}</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Categories -->
+<section class="section section-categories">
+    <div class="container">
+        <h2 class="text-center">What are you craving?</h2>
+        <div class="category-grid">
+            <a href="{{ url_for('main.bakeries') }}?search=bread" class="category-card">
+                <div class="category-icon"><i class="fas fa-bread-slice"></i></div>
+                <span>Breads</span>
+            </a>
+            <a href="{{ url_for('main.bakeries') }}?search=cake" class="category-card">
+                <div class="category-icon"><i class="fas fa-birthday-cake"></i></div>
+                <span>Cakes</span>
+            </a>
+            <a href="{{ url_for('main.bakeries') }}?search=pastry" class="category-card">
+                <div class="category-icon"><i class="fas fa-cookie-bite"></i></div>
+                <span>Pastries</span>
+            </a>
+            <a href="{{ url_for('main.bakeries') }}?search=cookie" class="category-card">
+                <div class="category-icon"><i class="fas fa-cookie"></i></div>
+                <span>Cookies</span>
+            </a>
+            <a href="{{ url_for('main.bakeries') }}?search=cupcake" class="category-card">
+                <div class="category-icon"><i class="fas fa-ice-cream"></i></div>
+                <span>Cupcakes</span>
+            </a>
+            <a href="{{ url_for('main.bakeries') }}?search=donut" class="category-card">
+                <div class="category-icon"><i class="fas fa-circle"></i></div>
+                <span>Donuts</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- All Bakeries -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2><i class="fas fa-store"></i> Popular Bakeries</h2>
+            <a href="{{ url_for('main.bakeries') }}" class="link-arrow">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="bakery-grid">
+            {% for bakery in bakeries %}
+            <a href="{{ url_for('main.bakery_detail', slug=bakery.slug) }}" class="bakery-card">
+                <div class="bakery-image">
+                    <img src="{{ url_for('static', filename='images/' ~ bakery.logo_url) }}" alt="{{ bakery.name }}"
+                        onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
+                    {% if not bakery.is_open %}
+                    <span class="badge badge-closed">Closed</span>
+                    {% endif %}
+                </div>
+                <div class="bakery-info">
+                    <h3>{{ bakery.name }}</h3>
+                    <p class="bakery-description">{{ bakery.description[:60] }}{% if bakery.description|length > 60
+                        %}...{% endif %}</p>
+                    <div class="bakery-meta">
+                        <span class="rating"><i class="fas fa-star"></i> {{ '%.1f'|format(bakery.rating) }}</span>
+                        <span class="delivery"><i class="fas fa-clock"></i> {{ bakery.delivery_time_mins }} mins</span>
+                    </div>
+                    {% if bakery.min_order_amount > 0 %}
+                    <div class="bakery-min-order">Min. ₹{{ '%.0f'|format(bakery.min_order_amount) }}</div>
+                    {% endif %}
+                </div>
+            </a>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-store-slash"></i>
+                <h3>No bakeries yet</h3>
+                <p>Be the first to join our platform!</p>
+                <a href="{{ url_for('auth.register_baker') }}" class="btn btn-primary">Register Your Bakery</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Popular Products -->
+{% if popular_products %}
+<section class="section section-products">
+    <div class="container">
+        <div class="section-header">
+            <h2><i class="fas fa-fire"></i> Bestsellers</h2>
+        </div>
+        <div class="product-grid">
+            {% for product in popular_products %}
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="{{ url_for('static', filename='images/' ~ product.image_url) }}" alt="{{ product.name }}"
+                        onerror="this.src='{{ url_for('static', filename='images/default-product.png') }}'">
+                    {% if product.discount_percentage > 0 %}
+                    <span class="badge badge-discount">{{ product.discount_percentage }}% OFF</span>
+                    {% endif %}
+                    {% if product.is_vegetarian %}
+                    <span class="veg-badge"><i class="fas fa-leaf"></i></span>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h4>{{ product.name }}</h4>
+                    <p class="product-bakery">{{ product.bakery.name }}</p>
+                    <div class="product-price">
+                        {% if product.discount_price %}
+                        <span class="price-old">₹{{ '%.0f'|format(product.price) }}</span>
+                        {% endif %}
+                        <span class="price-current">₹{{ '%.0f'|format(product.current_price) }}</span>
+                    </div>
+                    <a href="{{ url_for('main.bakery_detail', slug=product.bakery.slug) }}"
+                        class="btn btn-secondary btn-sm">View Bakery</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="section section-cta">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Are you an Artisan Baker?</h2>
+            <p>Join Local Crust and reach thousands of customers who love fresh, handmade bakery products.</p>
+            <a href="{{ url_for('main.become_baker') }}" class="btn btn-light btn-lg">
+                <i class="fas fa-store"></i> Partner with Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

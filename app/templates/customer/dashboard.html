@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Customer Dashboard{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-home"></i> Dashboard</h1>
+        <p>Welcome back, {{ current_user.name }}!</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="dashboard-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-xl);">
+            <!-- Quick Stats -->
+            <div class="stat-card">
+                <div class="stat-icon orders"><i class="fas fa-box"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ recent_orders|length }}</span>
+                    <span class="stat-label">Recent Orders</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f39c12, #d68910);"><i
+                        class="fas fa-bell"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ unread_notifications }}</span>
+                    <span class="stat-label">Unread Notifications</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dashboard-section" style="margin-top: var(--space-2xl);">
+            <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+            <div style="display: flex; gap: var(--space-md); margin-top: var(--space-lg); flex-wrap: wrap;">
+                <a href="{{ url_for('main.bakeries') }}" class="btn btn-primary">
+                    <i class="fas fa-store"></i> Browse Bakeries
+                </a>
+                <a href="{{ url_for('orders.order_history') }}" class="btn btn-secondary">
+                    <i class="fas fa-history"></i> Order History
+                </a>
+                <a href="{{ url_for('customer.profile') }}" class="btn btn-secondary">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        {% if recent_orders %}
+        <div class="dashboard-section" style="margin-top: var(--space-2xl);">
+            <div class="section-header">
+                <h3><i class="fas fa-clock"></i> Recent Orders</h3>
+                <a href="{{ url_for('orders.order_history') }}" class="link-arrow">View All <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="orders-list">
+                {% for order in recent_orders %}
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <span class="order-number">#{{ order.order_number }}</span>
+                            <span class="order-date">{{ order.created_at.strftime('%b %d, %Y') }}</span>
+                        </div>
+                        <span class="order-status status-{{ order.status }}">{{ order.status.replace('_', ' ').title()
+                            }}</span>
+                    </div>
+                    <div class="order-bakery">
+                        <i class="fas fa-store"></i> {{ order.bakery.name }}
+                    </div>
+                    <div class="order-footer">
+                        <span class="order-total">₹{{ '%.0f'|format(order.total_amount) }}</span>
+                        <a href="{{ url_for('orders.order_detail', order_number=order.order_number) }}"
+                            class="btn btn-secondary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

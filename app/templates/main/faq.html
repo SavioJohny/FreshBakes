@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-question-circle"></i> Frequently Asked Questions</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="faq-item"
+                style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg); box-shadow: var(--shadow-sm);">
+                <h4 style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md);">
+                    <i class="fas fa-shopping-cart" style="color: var(--primary);"></i>
+                    How do I place an order?
+                </h4>
+                <p style="color: var(--gray-600);">
+                    Simply browse our bakeries, select your favorite items, add them to your cart, and proceed to
+                    checkout. You can choose your delivery address and payment method before confirming your order.
+                </p>
+            </div>
+
+            <div class="faq-item"
+                style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg); box-shadow: var(--shadow-sm);">
+                <h4 style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md);">
+                    <i class="fas fa-truck" style="color: var(--primary);"></i>
+                    What are the delivery timings?
+                </h4>
+                <p style="color: var(--gray-600);">
+                    Delivery times vary by bakery and are displayed on each bakery's page. Most deliveries are completed
+                    within 30-60 minutes of order confirmation.
+                </p>
+            </div>
+
+            <div class="faq-item"
+                style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg); box-shadow: var(--shadow-sm);">
+                <h4 style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md);">
+                    <i class="fas fa-credit-card" style="color: var(--primary);"></i>
+                    What payment methods are accepted?
+                </h4>
+                <p style="color: var(--gray-600);">
+                    Currently, we accept Cash on Delivery (COD). Online payment options including UPI and cards are
+                    coming soon!
+                </p>
+            </div>
+
+            <div class="faq-item"
+                style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg); box-shadow: var(--shadow-sm);">
+                <h4 style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md);">
+                    <i class="fas fa-times-circle" style="color: var(--primary);"></i>
+                    Can I cancel my order?
+                </h4>
+                <p style="color: var(--gray-600);">
+                    You can cancel your order within 2-3 minutes of placing it, before the bakery starts preparing your
+                    items. Once preparation begins, cancellation may not be possible.
+                </p>
+            </div>
+
+            <div class="faq-item"
+                style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg); box-shadow: var(--shadow-sm);">
+                <h4 style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md);">
+                    <i class="fas fa-store" style="color: var(--primary);"></i>
+                    How can I register my bakery?
+                </h4>
+                <p style="color: var(--gray-600);">
+                    Click on "Become a Partner" or "Register Your Bakery" from the menu. Fill in your details and our
+                    team will review your application. Approval usually takes 1-2 business days.
+                </p>
+            </div>
+
+            <div class="faq-item"
+                style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); box-shadow: var(--shadow-sm);">
+                <h4 style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md);">
+                    <i class="fas fa-headset" style="color: var(--primary);"></i>
+                    How do I contact customer support?
+                </h4>
+                <p style="color: var(--gray-600);">
+                    You can reach us through our <a href="{{ url_for('main.contact') }}">Contact page</a>, email us at
+                    hello@localcrust.com, or call us at +91 80 1234 5678.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

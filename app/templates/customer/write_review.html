@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Write Review{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-star"></i> Write a Review</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="auth-card auth-card-wide" style="max-width: 600px; margin: 0 auto;">
+            <div
+                style="margin-bottom: var(--space-xl); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--gray-200);">
+                <h3 style="margin-bottom: var(--space-sm);">{{ order.bakery.name }}</h3>
+                <p style="color: var(--gray-600);">Order #{{ order.order_number }} - {{ order.created_at.strftime('%b
+                    %d, %Y') }}</p>
+            </div>
+
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="form-group">
+                    <label>Rating *</label>
+                    <div class="star-rating" style="display: flex; gap: var(--space-sm); font-size: 2rem;">
+                        {% for i in range(5, 0, -1) %}
+                        <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}" {% if i==5 %}checked{% endif
+                            %} style="display: none;">
+                        <label for="star{{ i }}" style="cursor: pointer; color: var(--gray-300);" class="star-label">
+                            <i class="fas fa-star"></i>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment">Your Review</label>
+                    <textarea name="comment" class="form-control" rows="5"
+                        placeholder="Tell us about your experience..."></textarea>
+                </div>
+
+                <div style="display: flex; gap: var(--space-md);">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Review
+                    </button>
+                    <a href="{{ url_for('orders.order_detail', order_number=order.order_number) }}"
+                        class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const stars = document.querySelectorAll('.star-label');
+    const inputs = document.querySelectorAll('input[name="rating"]');
+
+    function updateStars(rating) {
+        stars.forEach((star, index) => {
+            const starValue = 5 - index;
+            if (starValue <= rating) {
+                star.style.color = '#f39c12';
+            } else {
+                star.style.color = 'var(--gray-300)';
+            }
+        });
+    }
+
+    stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+            updateStars(5 - index);
+        });
+        star.addEventListener('mouseenter', () => {
+            updateStars(5 - index);
+        });
+    });
+
+    document.querySelector('.star-rating').addEventListener('mouseleave', () => {
+        const checked = document.querySelector('input[name="rating"]:checked');
+        updateStars(checked ? parseInt(checked.value) : 5);
+    });
+
+    updateStars(5);
+</script>
+{% endblock %}

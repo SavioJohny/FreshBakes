@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Reviews{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'baker/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>Reviews</h1>
+            <div class="stat-card" style="display: inline-flex; padding: var(--space-md);">
+                <span class="stat-value" style="font-size: 1.5rem;">{{ '%.1f'|format(bakery.rating) }}</span>
+                <i class="fas fa-star" style="color: #ffc107; margin-left: var(--space-sm);"></i>
+                <span style="margin-left: var(--space-sm); color: var(--gray-600);">({{ bakery.total_reviews }}
+                    reviews)</span>
+            </div>
+        </div>
+
+        {% if reviews %}
+        <div class="reviews-list" style="display: grid; gap: var(--space-lg);">
+            {% for review in reviews %}
+            <div class="dashboard-section">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
+                    <div>
+                        <strong>{{ review.user.name }}</strong>
+                        <span style="color: var(--gray-500); margin-left: var(--space-md);">{{
+                            review.created_at.strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <div>
+                        {% for i in range(5) %}
+                        <i class="fas fa-star"
+                            style="color: {% if i < review.rating %}#ffc107{% else %}var(--gray-300){% endif %};"></i>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% if review.comment %}
+                <p style="margin-bottom: var(--space-md);">{{ review.comment }}</p>
+                {% endif %}
+
+                {% if review.reply %}
+                <div
+                    style="background: var(--gray-50); padding: var(--space-md); border-radius: var(--radius-md); margin-top: var(--space-md);">
+                    <strong style="color: var(--primary);"><i class="fas fa-reply"></i> Your Response:</strong>
+                    <p style="margin-top: var(--space-sm);">{{ review.reply }}</p>
+                </div>
+                {% else %}
+                <form action="{{ url_for('baker.reply_review', review_id=review.id) }}" method="POST"
+                    style="margin-top: var(--space-md);">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="form-group" style="margin-bottom: var(--space-sm);">
+                        <textarea name="reply" class="form-control" rows="2"
+                            placeholder="Write a response..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-reply"></i> Reply
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-star"></i>
+            <h3>No reviews yet</h3>
+            <p>Reviews from customers will appear here</p>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

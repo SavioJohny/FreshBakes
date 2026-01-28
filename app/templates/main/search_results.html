@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-search"></i> Search Results</h1>
+        {% if query %}
+        <p>Results for "{{ query }}"</p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if not query %}
+        <div class="empty-state">
+            <i class="fas fa-search"></i>
+            <h3>Enter a search term</h3>
+            <p>Search for bakeries, cakes, breads, and more</p>
+        </div>
+        {% elif not bakeries and not products %}
+        <div class="empty-state">
+            <i class="fas fa-search"></i>
+            <h3>No results found</h3>
+            <p>Try a different search term or browse our bakeries</p>
+            <a href="{{ url_for('main.bakeries') }}" class="btn btn-primary">Browse Bakeries</a>
+        </div>
+        {% else %}
+        {% if bakeries %}
+        <div style="margin-bottom: var(--space-2xl);">
+            <h2 style="margin-bottom: var(--space-lg);"><i class="fas fa-store" style="color: var(--primary);"></i>
+                Bakeries</h2>
+            <div class="bakery-grid">
+                {% for bakery in bakeries %}
+                <a href="{{ url_for('main.bakery_detail', slug=bakery.slug) }}" class="bakery-card">
+                    <div class="bakery-image">
+                        <img src="{{ url_for('static', filename='images/' ~ bakery.logo_url) }}" alt="{{ bakery.name }}"
+                            onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
+                    </div>
+                    <div class="bakery-info">
+                        <h3>{{ bakery.name }}</h3>
+                        <div class="bakery-meta">
+                            <span class="rating"><i class="fas fa-star"></i> {{ '%.1f'|format(bakery.rating) }}</span>
+                            <span class="location"><i class="fas fa-map-marker-alt"></i> {{ bakery.city }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if products %}
+        <div>
+            <h2 style="margin-bottom: var(--space-lg);"><i class="fas fa-bread-slice"
+                    style="color: var(--primary);"></i> Products</h2>
+            <div class="product-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/' ~ product.image_url) }}"
+                            alt="{{ product.name }}"
+                            onerror="this.src='{{ url_for('static', filename='images/default-product.png') }}'">
+                    </div>
+                    <div class="product-info">
+                        <h4>{{ product.name }}</h4>
+                        <p class="product-bakery">{{ product.bakery.name }}</p>
+                        <div class="product-price">
+                            <span class="price-current">₹{{ '%.0f'|format(product.current_price) }}</span>
+                        </div>
+                        <a href="{{ url_for('main.bakery_detail', slug=product.bakery.slug) }}"
+                            class="btn btn-secondary btn-sm">View Bakery</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

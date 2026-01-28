@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ bakery.name }} - Admin{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'admin/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>{{ bakery.name }}</h1>
+            <div style="display: flex; gap: var(--space-sm);">
+                <span class="badge"
+                    style="{% if bakery.is_approved %}background: var(--success);{% else %}background: var(--warning);{% endif %} color: white;">
+                    {{ 'Approved' if bakery.is_approved else 'Pending' }}
+                </span>
+                {% if bakery.is_featured %}
+                <span class="badge" style="background: var(--primary); color: white;">Featured</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Bakery Info -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-store" style="color: var(--primary);"></i> Bakery Details</h3>
+                <div
+                    style="display: grid; grid-template-columns: 150px 1fr; gap: var(--space-md); margin-top: var(--space-lg);">
+                    <div>
+                        <img src="{{ url_for('static', filename='images/' ~ (bakery.logo_url or 'default-bakery.png')) }}"
+                            alt="{{ bakery.name }}"
+                            style="width: 150px; height: 150px; border-radius: var(--radius-lg); object-fit: cover;"
+                            onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
+                    </div>
+                    <div>
+                        <p><strong>Description:</strong> {{ bakery.description or 'N/A' }}</p>
+                        <p><strong>Address:</strong> {{ bakery.address }}, {{ bakery.city }} - {{ bakery.pincode }}</p>
+                        <p><strong>Phone:</strong> {{ bakery.phone }}</p>
+                        <p><strong>Email:</strong> {{ bakery.email or 'N/A' }}</p>
+                        <p><strong>Rating:</strong> {{ '%.1f'|format(bakery.rating) }} ({{ bakery.total_reviews }}
+                            reviews)</p>
+                        <p><strong>Delivery Time:</strong> {{ bakery.delivery_time_mins }} mins</p>
+                        <p><strong>Min Order:</strong> ₹{{ '%.0f'|format(bakery.min_order_amount) }}</p>
+                        <p><strong>Delivery Fee:</strong> ₹{{ '%.0f'|format(bakery.delivery_fee) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Owner Info -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-user" style="color: var(--primary);"></i> Owner Information</h3>
+                <div style="margin-top: var(--space-md);">
+                    <p><strong>Name:</strong> {{ bakery.owner.name }}</p>
+                    <p><strong>Email:</strong> {{ bakery.owner.email }}</p>
+                    <p><strong>Phone:</strong> {{ bakery.owner.phone or 'N/A' }}</p>
+                    <p><strong>Joined:</strong> {{ bakery.owner.created_at.strftime('%b %d, %Y') }}</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> Statistics</h3>
+                <div class="stats-grid" style="margin-top: var(--space-md);">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--primary-light);">
+                            <i class="fas fa-box" style="color: var(--primary);"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">{{ bakery.products.count() }}</span>
+                            <span class="stat-label">Products</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--success-light);">
+                            <i class="fas fa-shopping-bag" style="color: var(--success);"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">{{ bakery.orders.count() }}</span>
+                            <span class="stat-label">Total Orders</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--warning-light);">
+                            <i class="fas fa-star" style="color: var(--warning);"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">{{ bakery.total_reviews }}</span>
+                            <span class="stat-label">Reviews</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-cogs" style="color: var(--primary);"></i> Actions</h3>
+                <div style="display: flex; gap: var(--space-md); margin-top: var(--space-md); flex-wrap: wrap;">
+                    {% if not bakery.is_approved %}
+                    <form action="{{ url_for('admin.approve_bakery', bakery_id=bakery.id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Approve Bakery
+                        </button>
+                    </form>
+                    <form action="{{ url_for('admin.reject_bakery', bakery_id=bakery.id) }}" method="POST"
+                        onsubmit="return confirm('Are you sure you want to reject this bakery?');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn" style="background: var(--danger); color: white;">
+                            <i class="fas fa-times"></i> Reject Bakery
+                        </button>
+                    </form>
+                    {% endif %}
+
+                    <form action="{{ url_for('admin.toggle_featured', bakery_id=bakery.id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fas fa-crown"></i> {{ 'Unfeature' if bakery.is_featured else 'Feature' }}
+                        </button>
+                    </form>
+
+                    <a href="{{ url_for('main.bakery_detail', slug=bakery.slug) }}" class="btn btn-secondary"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i> View Public Page
+                    </a>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--space-xl);">
+                <a href="{{ url_for('admin.bakeries') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Bakeries
+                </a>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

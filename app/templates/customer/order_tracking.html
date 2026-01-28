@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Track Order #{{ order.order_number }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-truck"></i> Track Order</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div style="max-width: 700px; margin: 0 auto;">
+            <div class="auth-card" style="margin-bottom: var(--space-xl);">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
+                    <h3 style="margin: 0;">Order #{{ order.order_number }}</h3>
+                    <span class="order-status status-{{ order.status }}"
+                        style="font-size: 1rem; padding: var(--space-xs) var(--space-sm);">
+                        {{ order.status.replace('_', ' ').title() }}
+                    </span>
+                </div>
+
+                <p style="color: var(--gray-600);">
+                    <i class="fas fa-store"></i> {{ order.bakery.name }} •
+                    <i class="fas fa-clock"></i> {{ order.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                </p>
+            </div>
+
+            <!-- Order Timeline -->
+            <div class="auth-card">
+                <h3 style="margin-bottom: var(--space-xl);"><i class="fas fa-history"
+                        style="color: var(--primary);"></i> Order Timeline</h3>
+
+                <div class="timeline">
+                    {% for history in order.status_history %}
+                    <div class="timeline-item"
+                        style="display: flex; gap: var(--space-lg); margin-bottom: var(--space-lg); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--gray-100);">
+                        <div
+                            style="min-width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            {% if history.status == 'pending' %}
+                            <i class="fas fa-clock"></i>
+                            {% elif history.status == 'confirmed' %}
+                            <i class="fas fa-check"></i>
+                            {% elif history.status == 'preparing' %}
+                            <i class="fas fa-utensils"></i>
+                            {% elif history.status == 'ready' %}
+                            <i class="fas fa-box"></i>
+                            {% elif history.status == 'out_for_delivery' %}
+                            <i class="fas fa-truck"></i>
+                            {% elif history.status == 'delivered' %}
+                            <i class="fas fa-check-double"></i>
+                            {% else %}
+                            <i class="fas fa-info"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 var(--space-xs);">{{ history.status.replace('_', ' ').title() }}</h4>
+                            <p style="color: var(--gray-600); margin: 0;">{{ history.created_at.strftime('%b %d, %Y at
+                                %I:%M %p') }}</p>
+                            {% if history.notes %}
+                            <p style="color: var(--gray-500); margin: var(--space-xs) 0 0; font-size: 0.9rem;">{{
+                                history.notes }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div style="margin-top: var(--space-xl);">
+                <a href="{{ url_for('orders.order_detail', order_number=order.order_number) }}"
+                    class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Order Details
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

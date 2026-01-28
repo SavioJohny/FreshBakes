@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1><i class="fas fa-bell"></i> Notifications</h1>
+            {% if notifications %}
+            <form action="{{ url_for('customer.mark_notifications_read') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-check-double"></i> Mark All Read
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if notifications %}
+        <div style="max-width: 700px; margin: 0 auto;">
+            {% for notification in notifications %}
+            <div class="auth-card"
+                style="margin-bottom: var(--space-md); {% if not notification.is_read %}border-left: 4px solid var(--primary);{% endif %}">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h4 style="margin: 0 0 var(--space-xs);">{{ notification.title }}</h4>
+                        <p style="color: var(--gray-600); margin: 0;">{{ notification.message }}</p>
+                    </div>
+                    <small style="color: var(--gray-500); white-space: nowrap; margin-left: var(--space-md);">
+                        {{ notification.created_at.strftime('%b %d, %I:%M %p') }}
+                    </small>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if pagination.pages > 1 %}
+            <nav class="pagination">
+                {% if pagination.has_prev %}
+                <a href="{{ url_for('customer.notifications', page=pagination.prev_num) }}" class="page-link">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </a>
+                {% endif %}
+                <span class="page-info">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+                {% if pagination.has_next %}
+                <a href="{{ url_for('customer.notifications', page=pagination.next_num) }}" class="page-link">
+                    Next <i class="fas fa-chevron-right"></i>
+                </a>
+                {% endif %}
+            </nav>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-bell-slash"></i>
+            <h3>No notifications</h3>
+            <p>You're all caught up!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

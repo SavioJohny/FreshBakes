@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Platform Coupons{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'admin/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>Platform Coupons</h1>
+            <a href="{{ url_for('admin.add_coupon') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Coupon
+            </a>
+        </div>
+
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Discount</th>
+                        <th>Min Order</th>
+                        <th>Usage</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for coupon in platform_coupons %}
+                    <tr>
+                        <td><strong>{{ coupon.code }}</strong></td>
+                        <td>{{ coupon.description or '-' }}</td>
+                        <td>
+                            {% if coupon.discount_type == 'percentage' %}{{ coupon.discount_value }}%{% else %}₹{{
+                            coupon.discount_value }}{% endif %}
+                            {% if coupon.max_discount %}(max ₹{{ coupon.max_discount }}){% endif %}
+                        </td>
+                        <td>₹{{ coupon.min_order_amount }}</td>
+                        <td>{{ coupon.used_count }}/{{ coupon.usage_limit or '∞' }}</td>
+                        <td>
+                            <span class="status-badge {% if coupon.is_active %}open{% else %}closed{% endif %}">
+                                {{ 'Active' if coupon.is_active else 'Inactive' }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_coupon', coupon_id=coupon.id) }}"
+                                class="btn btn-secondary btn-sm" style="margin-right: 4px;">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ url_for('admin.toggle_coupon', coupon_id=coupon.id) }}" method="POST"
+                                style="display: inline;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-{% if coupon.is_active %}pause{% else %}play{% endif %}"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}

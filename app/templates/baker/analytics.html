@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'baker/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>Analytics</h1>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon orders"><i class="fas fa-box"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ this_month_orders }}</span>
+                    <span class="stat-label">Orders This Month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon revenue"><i class="fas fa-rupee-sign"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">₹{{ '%.0f'|format(this_month_revenue) }}</span>
+                    <span class="stat-label">Revenue This Month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"><i
+                        class="fas fa-chart-line"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">₹{{ '%.0f'|format(avg_order_value) }}</span>
+                    <span class="stat-label">Avg Order Value</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);"><i
+                        class="fas fa-star"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ '%.1f'|format(bakery.rating) }}</span>
+                    <span class="stat-label">Average Rating</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xl);">
+            <!-- Top Products -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-fire" style="color: var(--primary);"></i> Top Products</h3>
+                {% if top_products %}
+                <div style="margin-top: var(--space-lg);">
+                    {% for product, count in top_products %}
+                    <div
+                        style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--gray-100);">
+                        <span>{{ product.name }}</span>
+                        <span style="color: var(--gray-600);">{{ count }} orders</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted" style="margin-top: var(--space-md);">No sales data yet</p>
+                {% endif %}
+            </div>
+
+            <!-- Monthly Summary -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-calendar" style="color: var(--primary);"></i> Monthly Summary</h3>
+                <div style="margin-top: var(--space-lg);">
+                    <div class="quick-stats">
+                        <div class="quick-stat" style="text-align: left;">
+                            <span class="label">Total Orders (All Time)</span>
+                            <span class="value">{{ total_orders }}</span>
+                        </div>
+                        <div class="quick-stat" style="text-align: left;">
+                            <span class="label">Total Revenue (All Time)</span>
+                            <span class="value">₹{{ '%.0f'|format(total_revenue) }}</span>
+                        </div>
+                        <div class="quick-stat" style="text-align: left;">
+                            <span class="label">Total Products</span>
+                            <span class="value">{{ total_products }}</span>
+                        </div>
+                        <div class="quick-stat" style="text-align: left;">
+                            <span class="label">Total Reviews</span>
+                            <span class="value">{{ bakery.total_reviews }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

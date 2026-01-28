@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body_class %}auth-page{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <a href="{{ url_for('main.index') }}" class="auth-logo">
+                <i class="fas fa-bread-slice"></i>
+                <span>Local Crust</span>
+            </a>
+            <h1>Welcome Back!</h1>
+            <p>Sign in to continue ordering from your favorite bakeries</p>
+        </div>
+
+        <form method="POST" class="auth-form">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                {{ form.email(class="form-control", placeholder="Enter your email") }}
+                {% if form.email.errors %}
+                <span class="form-error">{{ form.email.errors[0] }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock"></i> Password</label>
+                <div class="password-input">
+                    {{ form.password(class="form-control", placeholder="Enter your password") }}
+                    <button type="button" class="password-toggle" onclick="togglePassword(this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                {% if form.password.errors %}
+                <span class="form-error">{{ form.password.errors[0] }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-check">
+                    {{ form.remember(class="form-check-input") }}
+                    <label for="remember">Remember me</label>
+                </div>
+                <a href="{{ url_for('auth.forgot_password') }}" class="link-forgot">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Sign Up</a></p>
+            <p class="auth-divider"><span>or</span></p>
+            <p>Want to sell? <a href="{{ url_for('auth.register_baker') }}">Register as Baker</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePassword(btn) {
+        const input = btn.previousElementSibling;
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+</script>
+{% endblock %}

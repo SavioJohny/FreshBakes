@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Replace Cart?{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: var(--space-3xl);">
+    <div class="container">
+        <div class="auth-card" style="max-width: 500px; margin: 0 auto; text-align: center;">
+            <div
+                style="width: 80px; height: 80px; background: var(--warning); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-xl); font-size: 2rem; color: white;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+
+            <h2 style="margin-bottom: var(--space-md);">Replace Cart?</h2>
+            <p style="color: var(--gray-600); margin-bottom: var(--space-xl);">
+                Your cart contains items from a different bakery. Adding this item will clear your current cart and
+                start a new one.
+            </p>
+
+            <div
+                style="background: var(--gray-50); padding: var(--space-lg); border-radius: var(--radius-md); margin-bottom: var(--space-xl); text-align: left;">
+                <h4 style="margin-bottom: var(--space-sm);">Adding:</h4>
+                <p style="margin: 0;"><strong>{{ product.name }}</strong> × {{ quantity }}</p>
+                <p style="color: var(--gray-600); margin: var(--space-xs) 0 0;">from {{ product.bakery.name }}</p>
+            </div>
+
+            <form action="{{ url_for('cart.add_to_cart') }}" method="POST" style="display: inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="quantity" value="{{ quantity }}">
+                <input type="hidden" name="replace_cart" value="yes">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-trash-alt"></i> Replace Cart
+                </button>
+            </form>
+            <a href="{{ url_for('cart.view_cart') }}" class="btn btn-secondary" style="margin-left: var(--space-sm);">
+                <i class="fas fa-shopping-cart"></i> Keep Current Cart
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

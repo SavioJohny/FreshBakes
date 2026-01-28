@@ -1,0 +1,3 @@
+cd D:\FreshBakes
+.\venv\Scripts\activate
+python run.py

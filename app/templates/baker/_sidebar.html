@@ -1,0 +1,54 @@
+<!-- Baker Dashboard Sidebar -->
+<aside class="dashboard-sidebar">
+    <div class="sidebar-header">
+        <img src="{{ url_for('static', filename='images/' ~ bakery.logo_url) }}" alt="{{ bakery.name }}"
+            class="bakery-avatar" onerror="this.src='{{ url_for('static', filename='images/default-bakery.svg') }}'">
+        <h3>{{ bakery.name }}</h3>
+        <span class="status-badge {% if bakery.is_open %}open{% else %}closed{% endif %}">
+            {{ 'Open' if bakery.is_open else 'Closed' }}
+        </span>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="{{ url_for('baker.dashboard') }}"
+            class="nav-item {% if request.endpoint == 'baker.dashboard' %}active{% endif %}">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="{{ url_for('baker.orders') }}" class="nav-item {% if 'order' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-box"></i> Orders
+        </a>
+        <a href="{{ url_for('baker.products') }}"
+            class="nav-item {% if 'product' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-bread-slice"></i> Products
+        </a>
+        <a href="{{ url_for('baker.categories') }}"
+            class="nav-item {% if 'categor' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-tags"></i> Categories
+        </a>
+        <a href="{{ url_for('baker.reviews') }}"
+            class="nav-item {% if 'review' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-star"></i> Reviews
+        </a>
+        <a href="{{ url_for('baker.analytics') }}"
+            class="nav-item {% if 'analytics' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-chart-line"></i> Analytics
+        </a>
+        <a href="{{ url_for('baker.coupons') }}"
+            class="nav-item {% if 'coupon' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-percent"></i> Coupons
+        </a>
+        <a href="{{ url_for('baker.profile') }}"
+            class="nav-item {% if 'profile' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <form action="{{ url_for('baker.toggle_status') }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit"
+                class="btn {% if bakery.is_open %}btn-danger{% else %}btn-success{% endif %} btn-block">
+                <i class="fas fa-power-off"></i>
+                {{ 'Close Shop' if bakery.is_open else 'Open Shop' }}
+            </button>
+        </form>
+    </div>
+</aside>

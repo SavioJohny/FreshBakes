@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-box"></i> My Orders</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <span class="order-number">#{{ order.order_number }}</span>
+                        <span class="order-date">{{ order.created_at.strftime('%b %d, %Y at %I:%M %p') }}</span>
+                    </div>
+                    <span class="order-status status-{{ order.status }}">
+                        {{ order.status.replace('_', ' ').title() }}
+                    </span>
+                </div>
+
+                <div class="order-bakery">
+                    <i class="fas fa-store"></i>
+                    <a href="{{ url_for('main.bakery_detail', slug=order.bakery.slug) }}">{{ order.bakery.name }}</a>
+                </div>
+
+                <div class="order-items">
+                    {% for item in order.items.limit(3).all() %}
+                    <span class="order-item">{{ item.product_name }} × {{ item.quantity }}</span>
+                    {% endfor %}
+                    {% if order.items.count() > 3 %}
+                    <span class="order-item more">+{{ order.items.count() - 3 }} more</span>
+                    {% endif %}
+                </div>
+
+                <div class="order-footer">
+                    <span class="order-total">₹{{ '%.0f'|format(order.total_amount) }}</span>
+                    <div class="order-actions">
+                        <a href="{{ url_for('orders.order_detail', order_number=order.order_number) }}"
+                            class="btn btn-secondary btn-sm">
+                            View Details
+                        </a>
+                        {% if order.status == 'delivered' and not order.review %}
+                        <a href="{{ url_for('customer.write_review', order_id=order.id) }}"
+                            class="btn btn-primary btn-sm">
+                            <i class="fas fa-star"></i> Review
+                        </a>
+                        {% endif %}
+                        {% if order.status == 'delivered' %}
+                        <form action="{{ url_for('orders.reorder', order_number=order.order_number) }}" method="POST"
+                            style="display: inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-redo"></i> Reorder
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if pagination.pages > 1 %}
+        <nav class="pagination">
+            {% if pagination.has_prev %}
+            <a href="{{ url_for('orders.order_history', page=pagination.prev_num) }}" class="page-link">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+            {% endif %}
+            <span class="page-info">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+            {% if pagination.has_next %}
+            <a href="{{ url_for('orders.order_history', page=pagination.next_num) }}" class="page-link">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+            {% endif %}
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>No orders yet</h3>
+            <p>You haven't placed any orders. Start exploring our bakeries!</p>
+            <a href="{{ url_for('main.bakeries') }}" class="btn btn-primary">
+                <i class="fas fa-store"></i> Browse Bakeries
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

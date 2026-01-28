@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}All Orders{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'admin/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>All Orders</h1>
+        </div>
+
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Bakery</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>{{ order.order_number }}</strong></td>
+                        <td>{{ order.customer.name }}</td>
+                        <td>{{ order.bakery.name }}</td>
+                        <td>₹{{ '%.0f'|format(order.total_amount) }}</td>
+                        <td><span class="status-badge status-{{ order.status }}">{{ order.status.replace('_', '
+                                ').title() }}</span></td>
+                        <td>{{ order.created_at.strftime('%b %d, %Y %I:%M %p') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}

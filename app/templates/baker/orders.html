@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Orders - Baker Dashboard{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'baker/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>Orders</h1>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filters-bar" style="margin-bottom: var(--space-xl);">
+            <a href="{{ url_for('baker.orders') }}"
+                class="btn {% if not status_filter %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">All</a>
+            <a href="{{ url_for('baker.orders', status='pending') }}"
+                class="btn {% if status_filter == 'pending' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Pending</a>
+            <a href="{{ url_for('baker.orders', status='confirmed') }}"
+                class="btn {% if status_filter == 'confirmed' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Confirmed</a>
+            <a href="{{ url_for('baker.orders', status='preparing') }}"
+                class="btn {% if status_filter == 'preparing' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Preparing</a>
+            <a href="{{ url_for('baker.orders', status='ready') }}"
+                class="btn {% if status_filter == 'ready' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Ready</a>
+            <a href="{{ url_for('baker.orders', status='delivered') }}"
+                class="btn {% if status_filter == 'delivered' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Delivered</a>
+        </div>
+
+        {% if orders %}
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>{{ order.order_number }}</strong></td>
+                        <td>{{ order.customer.name }}</td>
+                        <td>{{ order.items.count() }} items</td>
+                        <td>₹{{ '%.0f'|format(order.total_amount) }}</td>
+                        <td><span class="status-badge status-{{ order.status }}">{{ order.status.replace('_', '
+                                ').title() }}</span></td>
+                        <td>{{ order.created_at.strftime('%b %d, %I:%M %p') }}</td>
+                        <td>
+                            <a href="{{ url_for('baker.order_detail', order_id=order.id) }}"
+                                class="btn btn-sm btn-primary">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-box"></i>
+            <h3>No orders found</h3>
+            <p>Orders will appear here when customers place them</p>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

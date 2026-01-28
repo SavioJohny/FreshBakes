@@ -1,0 +1,45 @@
+<!-- Admin Dashboard Sidebar -->
+<aside class="dashboard-sidebar admin-sidebar">
+    <div class="sidebar-header">
+        <i class="fas fa-shield-alt" style="font-size: 2rem; color: var(--primary);"></i>
+        <h3>Admin Panel</h3>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="{{ url_for('admin.dashboard') }}"
+            class="nav-item {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="{{ url_for('admin.pending_approvals') }}"
+            class="nav-item {% if 'pending' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-user-check"></i> Approvals
+            {% if pending_count and pending_count > 0 %}<span class="badge">{{ pending_count }}</span>{% endif %}
+        </a>
+        <a href="{{ url_for('admin.bakeries') }}"
+            class="nav-item {% if request.endpoint == 'admin.bakeries' %}active{% endif %}">
+            <i class="fas fa-store"></i> Bakeries
+        </a>
+        <a href="{{ url_for('admin.users') }}" class="nav-item {% if 'user' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-users"></i> Users
+        </a>
+        <a href="{{ url_for('admin.orders') }}"
+            class="nav-item {% if request.endpoint == 'admin.orders' %}active{% endif %}">
+            <i class="fas fa-box"></i> Orders
+        </a>
+        <a href="{{ url_for('admin.reviews') }}"
+            class="nav-item {% if request.endpoint == 'admin.reviews' %}active{% endif %}">
+            <i class="fas fa-star"></i> Reviews
+        </a>
+        <a href="{{ url_for('admin.coupons') }}"
+            class="nav-item {% if request.endpoint == 'admin.coupons' %}active{% endif %}">
+            <i class="fas fa-percent"></i> Coupons
+        </a>
+        <a href="{{ url_for('admin.messages') }}"
+            class="nav-item {% if 'message' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-envelope"></i> Messages
+        </a>
+        <a href="{{ url_for('admin.reports') }}"
+            class="nav-item {% if 'report' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-chart-bar"></i> Reports
+        </a>
+    </nav>
+</aside>

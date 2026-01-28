@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.name }} - Admin{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'admin/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-user"></i> {{ user.name }}</h1>
+            <span class="badge"
+                style="{% if user.is_active %}background: var(--success);{% else %}background: var(--danger);{% endif %} color: white;">
+                {{ 'Active' if user.is_active else 'Inactive' }}
+            </span>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- User Info -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-id-card" style="color: var(--primary);"></i> User Information</h3>
+                <div style="margin-top: var(--space-md);">
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Phone:</strong> {{ user.phone or 'N/A' }}</p>
+                    <p><strong>Role:</strong> {{ user.role.title() }}</p>
+                    <p><strong>Joined:</strong> {{ user.created_at.strftime('%b %d, %Y at %I:%M %p') }}</p>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            {% if orders %}
+            <div class="dashboard-section">
+                <h3><i class="fas fa-shopping-bag" style="color: var(--primary);"></i> Recent Orders</h3>
+                <table class="data-table" style="margin-top: var(--space-md);">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Bakery</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.order_number }}</td>
+                            <td>{{ order.bakery.name }}</td>
+                            <td>₹{{ '%.0f'|format(order.total_amount) }}</td>
+                            <td>
+                                <span class="order-status status-{{ order.status }}">
+                                    {{ order.status.replace('_', ' ').title() }}
+                                </span>
+                            </td>
+                            <td>{{ order.created_at.strftime('%b %d, %Y') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            <!-- Actions -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-cogs" style="color: var(--primary);"></i> Actions</h3>
+                <div style="display: flex; gap: var(--space-md); margin-top: var(--space-md);">
+                    <form action="{{ url_for('admin.toggle_user_status', user_id=user.id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit"
+                            class="btn {% if user.is_active %}btn-secondary{% else %}btn-primary{% endif %}">
+                            <i class="fas fa-{{ 'ban' if user.is_active else 'check' }}"></i>
+                            {{ 'Deactivate' if user.is_active else 'Activate' }} User
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--space-xl);">
+                <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Users
+                </a>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

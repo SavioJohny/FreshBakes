@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Messages - Admin{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'admin/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-envelope"></i> Contact Messages</h1>
+            <div class="filter-tabs">
+                <a href="{{ url_for('admin.messages') }}"
+                    class="filter-tab {% if not current_status %}active{% endif %}">All</a>
+                <a href="{{ url_for('admin.messages', status='new') }}"
+                    class="filter-tab {% if current_status == 'new' %}active{% endif %}">New</a>
+                <a href="{{ url_for('admin.messages', status='read') }}"
+                    class="filter-tab {% if current_status == 'read' %}active{% endif %}">Read</a>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            {% if messages %}
+            <div class="messages-list" style="display: flex; flex-direction: column; gap: var(--space-md);">
+                {% for message in messages %}
+                <div class="message-card"
+                    style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); 
+                           box-shadow: var(--shadow-sm); border-left: 4px solid {% if message.status == 'new' %}var(--primary){% else %}var(--gray-300){% endif %};">
+
+                    <div class="message-header"
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
+                        <div>
+                            <h4 style="margin: 0 0 var(--space-xs) 0; color: var(--gray-900);">
+                                {{ message.subject or 'No Subject' }}
+                            </h4>
+                            <div
+                                style="display: flex; gap: var(--space-md); font-size: 0.875rem; color: var(--gray-600);">
+                                <span><i class="fas fa-user" style="margin-right: 4px;"></i>{{ message.name }}</span>
+                                <span><i class="fas fa-envelope" style="margin-right: 4px;"></i>{{ message.email
+                                    }}</span>
+                                <span><i class="fas fa-clock" style="margin-right: 4px;"></i>{{
+                                    message.created_at.strftime('%b %d, %Y at %I:%M %p') }}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                            <span class="badge"
+                                style="padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+                                       background: {% if message.status == 'new' %}var(--primary){% else %}var(--gray-400){% endif %}; color: white;">
+                                {{ message.status.title() }}
+                            </span>
+                            {% if message.status == 'new' %}
+                            <form action="{{ url_for('admin.mark_message_read', message_id=message.id) }}" method="POST"
+                                style="margin: 0;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-secondary" title="Mark as Read">
+                                    <i class="fas fa-check"></i> Mark Read
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="message-body" style="background: var(--gray-50); padding: var(--space-md); border-radius: var(--radius-md); 
+                               color: var(--gray-700); line-height: 1.6;">
+                        {{ message.message }}
+                    </div>
+
+                    <div class="message-actions" style="margin-top: var(--space-md);">
+                        <a href="mailto:{{ message.email }}?subject=Re: {{ message.subject }}"
+                            class="btn btn-primary btn-sm">
+                            <i class="fas fa-reply"></i> Reply via Email
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if pagination.pages > 1 %}
+            <nav class="pagination"
+                style="margin-top: var(--space-xl); display: flex; justify-content: center; align-items: center; gap: var(--space-md);">
+                {% if pagination.has_prev %}
+                <a href="{{ url_for('admin.messages', page=pagination.prev_num, status=current_status) }}"
+                    class="btn btn-secondary btn-sm">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </a>
+                {% endif %}
+                <span style="color: var(--gray-600);">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+                {% if pagination.has_next %}
+                <a href="{{ url_for('admin.messages', page=pagination.next_num, status=current_status) }}"
+                    class="btn btn-secondary btn-sm">
+                    Next <i class="fas fa-chevron-right"></i>
+                </a>
+                {% endif %}
+            </nav>
+            {% endif %}
+            {% else %}
+            <div class="empty-state" style="text-align: center; padding: var(--space-3xl);">
+                <i class="fas fa-envelope-open"
+                    style="font-size: 3rem; color: var(--gray-400); margin-bottom: var(--space-lg);"></i>
+                <h3 style="margin: 0 0 var(--space-sm) 0;">No messages</h3>
+                <p style="color: var(--gray-600); margin: 0;">No contact messages received yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+</div>
+{% endblock %}

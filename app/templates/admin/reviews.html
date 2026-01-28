@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Reviews{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'admin/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>All Reviews</h1>
+        </div>
+
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bakery</th>
+                        <th>Customer</th>
+                        <th>Rating</th>
+                        <th>Comment</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in reviews %}
+                    <tr>
+                        <td>{{ review.bakery.name }}</td>
+                        <td>{{ review.user.name }}</td>
+                        <td>
+                            {% for i in range(5) %}
+                            <i class="fas fa-star"
+                                style="color: {% if i < review.rating %}#ffc107{% else %}var(--gray-300){% endif %};"></i>
+                            {% endfor %}
+                        </td>
+                        <td>{{ (review.comment[:50] + '...') if review.comment and review.comment|length > 50 else
+                            review.comment or '-' }}</td>
+                        <td>{{ review.created_at.strftime('%b %d, %Y') }}</td>
+                        <td>
+                            <form action="{{ url_for('admin.delete_review', review_id=review.id) }}" method="POST"
+                                onsubmit="return confirm('Delete this review?');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm"
+                                    style="background: var(--danger); color: white;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}

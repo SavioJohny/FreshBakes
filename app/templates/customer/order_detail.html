@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Order #{{ order.order_number }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-box"></i> Order #{{ order.order_number }}</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <!-- Order Status -->
+            <div class="auth-card" style="margin-bottom: var(--space-xl);">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
+                    <div>
+                        <span class="order-status status-{{ order.status }}"
+                            style="font-size: 1.1rem; padding: var(--space-sm) var(--space-md);">
+                            {{ order.status.replace('_', ' ').title() }}
+                        </span>
+                    </div>
+                    <span style="color: var(--gray-600);">{{ order.created_at.strftime('%b %d, %Y at %I:%M %p')
+                        }}</span>
+                </div>
+
+                <!-- Order Timeline -->
+                <div class="order-timeline">
+                    {% set statuses = ['pending', 'confirmed', 'preparing', 'ready', 'out_for_delivery', 'delivered'] %}
+                    {% set current_index = statuses.index(order.status) if order.status in statuses else -1 %}
+                    <div style="display: flex; justify-content: space-between; position: relative;">
+                        {% for status in statuses %}
+                        <div style="text-align: center; flex: 1;">
+                            <div
+                                style="width: 30px; height: 30px; border-radius: 50%; margin: 0 auto var(--space-xs); display: flex; align-items: center; justify-content: center;
+                                {% if loop.index0 <= current_index %}background: var(--primary); color: white;{% else %}background: var(--gray-200); color: var(--gray-500);{% endif %}">
+                                <i class="fas fa-check" style="font-size: 0.8rem;"></i>
+                            </div>
+                            <small style="font-size: 0.7rem; color: var(--gray-600);">{{ status.replace('_', '
+                                ').title() }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bakery Info -->
+            <div class="auth-card" style="margin-bottom: var(--space-xl);">
+                <h3 style="margin-bottom: var(--space-md);"><i class="fas fa-store" style="color: var(--primary);"></i>
+                    Bakery</h3>
+                <div style="display: flex; align-items: center; gap: var(--space-md);">
+                    <img src="{{ url_for('static', filename='images/' ~ (order.bakery.logo_url or 'default-bakery.png')) }}"
+                        alt="{{ order.bakery.name }}"
+                        style="width: 60px; height: 60px; border-radius: var(--radius-md); object-fit: cover;"
+                        onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
+                    <div>
+                        <h4 style="margin: 0;">{{ order.bakery.name }}</h4>
+                        <p style="color: var(--gray-600); margin: 0;">{{ order.bakery.city }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items -->
+            <div class="auth-card" style="margin-bottom: var(--space-xl);">
+                <h3 style="margin-bottom: var(--space-lg);"><i class="fas fa-shopping-bag"
+                        style="color: var(--primary);"></i> Items</h3>
+                {% for item in order.items %}
+                <div
+                    style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--gray-100);">
+                    <div>
+                        <span style="font-weight: 500;">{{ item.product_name }}</span>
+                        <span style="color: var(--gray-600);"> × {{ item.quantity }}</span>
+                    </div>
+                    <span>₹{{ '%.0f'|format(item.unit_price * item.quantity) }}</span>
+                </div>
+                {% endfor %}
+
+                <div
+                    style="margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 2px solid var(--gray-200);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                        <span>Subtotal</span>
+                        <span>₹{{ '%.0f'|format(order.subtotal) }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                        <span>Delivery Fee</span>
+                        <span>₹{{ '%.0f'|format(order.delivery_fee) }}</span>
+                    </div>
+                    {% if order.discount > 0 %}
+                    <div
+                        style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs); color: var(--success);">
+                        <span>Discount</span>
+                        <span>-₹{{ '%.0f'|format(order.discount) }}</span>
+                    </div>
+                    {% endif %}
+                    <div
+                        style="display: flex; justify-content: space-between; font-weight: 600; font-size: 1.1rem; margin-top: var(--space-sm);">
+                        <span>Total</span>
+                        <span style="color: var(--primary);">₹{{ '%.0f'|format(order.total_amount) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Address -->
+            <div class="auth-card" style="margin-bottom: var(--space-xl);">
+                <h3 style="margin-bottom: var(--space-md);"><i class="fas fa-map-marker-alt"
+                        style="color: var(--primary);"></i> Delivery Address</h3>
+                <p style="margin: 0;">{{ order.delivery_address }}</p>
+            </div>
+
+            <!-- Payment Info -->
+            <div class="auth-card" style="margin-bottom: var(--space-xl);">
+                <h3 style="margin-bottom: var(--space-md);"><i class="fas fa-wallet" style="color: var(--primary);"></i>
+                    Payment</h3>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Method</span>
+                    <span>{{ order.payment_method.replace('_', ' ').title() }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: var(--space-xs);">
+                    <span>Status</span>
+                    <span class="badge"
+                        style="background: {% if order.payment_status == 'paid' %}var(--success){% else %}var(--warning){% endif %}; color: white;">
+                        {{ order.payment_status.title() }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; gap: var(--space-md);">
+                <a href="{{ url_for('orders.order_history') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Orders
+                </a>
+                {% if order.status == 'delivered' and not order.review %}
+                <a href="{{ url_for('customer.write_review', order_id=order.id) }}" class="btn btn-primary">
+                    <i class="fas fa-star"></i> Write Review
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

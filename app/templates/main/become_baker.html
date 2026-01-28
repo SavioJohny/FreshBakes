@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Become a Partner{% endblock %}
+
+{% block content %}
+<section class="hero"
+    style="background: var(--primary-gradient); color: white; padding: var(--space-3xl) var(--space-lg);">
+    <div class="container" style="text-align: center;">
+        <h1 style="color: white; font-size: 3rem; margin-bottom: var(--space-lg);">Grow Your Bakery with Local Crust
+        </h1>
+        <p
+            style="font-size: 1.25rem; opacity: 0.9; margin-bottom: var(--space-xl); max-width: 600px; margin-left: auto; margin-right: auto;">
+            Join our network of artisan bakers and reach thousands of customers who love fresh, handmade bakery
+            products.
+        </p>
+        <a href="{{ url_for('auth.register_baker') }}" class="btn btn-light btn-lg">
+            <i class="fas fa-store"></i> Register Your Bakery
+        </a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: var(--space-2xl);">Why Partner with Us?</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-xl);">
+            <div
+                style="background: var(--white); padding: var(--space-xl); border-radius: var(--radius-lg); text-align: center; box-shadow: var(--shadow-sm);">
+                <div
+                    style="width: 80px; height: 80px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-lg); font-size: 2rem; color: white;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 style="margin-bottom: var(--space-md);">Reach More Customers</h3>
+                <p style="color: var(--gray-600);">Get discovered by thousands of customers actively looking for quality
+                    bakery products in your area.</p>
+            </div>
+
+            <div
+                style="background: var(--white); padding: var(--space-xl); border-radius: var(--radius-lg); text-align: center; box-shadow: var(--shadow-sm);">
+                <div
+                    style="width: 80px; height: 80px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-lg); font-size: 2rem; color: white;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 style="margin-bottom: var(--space-md);">Grow Your Business</h3>
+                <p style="color: var(--gray-600);">Increase your revenue with our easy-to-use platform. Our partners see
+                    an average 40% increase in orders.</p>
+            </div>
+
+            <div
+                style="background: var(--white); padding: var(--space-xl); border-radius: var(--radius-lg); text-align: center; box-shadow: var(--shadow-sm);">
+                <div
+                    style="width: 80px; height: 80px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-lg); font-size: 2rem; color: white;">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 style="margin-bottom: var(--space-md);">Easy Management</h3>
+                <p style="color: var(--gray-600);">Manage orders, products, and your bakery profile from our simple
+                    dashboard. No technical skills needed.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="background: var(--gray-50);">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: var(--space-2xl);">How It Works</h2>
+
+        <div
+            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-xl); max-width: 900px; margin: 0 auto;">
+            <div style="text-align: center;">
+                <div
+                    style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-md); font-weight: 700;">
+                    1</div>
+                <h4>Register</h4>
+                <p style="font-size: 0.9rem; color: var(--gray-600);">Fill out our simple registration form</p>
+            </div>
+
+            <div style="text-align: center;">
+                <div
+                    style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-md); font-weight: 700;">
+                    2</div>
+                <h4>Get Approved</h4>
+                <p style="font-size: 0.9rem; color: var(--gray-600);">Our team reviews your application</p>
+            </div>
+
+            <div style="text-align: center;">
+                <div
+                    style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-md); font-weight: 700;">
+                    3</div>
+                <h4>Add Products</h4>
+                <p style="font-size: 0.9rem; color: var(--gray-600);">Set up your menu and prices</p>
+            </div>
+
+            <div style="text-align: center;">
+                <div
+                    style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-md); font-weight: 700;">
+                    4</div>
+                <h4>Start Selling</h4>
+                <p style="font-size: 0.9rem; color: var(--gray-600);">Go live and receive orders</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-cta">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Ready to start?</h2>
+            <p>Join 50+ bakeries already growing with Local Crust</p>
+            <a href="{{ url_for('auth.register_baker') }}" class="btn btn-light btn-lg">
+                <i class="fas fa-rocket"></i> Get Started Now
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

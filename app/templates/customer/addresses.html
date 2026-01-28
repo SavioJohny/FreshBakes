@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}My Addresses{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-map-marker-alt"></i> Delivery Addresses</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: var(--space-xl);">
+                <a href="{{ url_for('customer.add_address') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add New Address
+                </a>
+            </div>
+
+            {% if addresses %}
+            <div class="address-list" style="display: grid; gap: var(--space-lg);">
+                {% for address in addresses %}
+                <div class="address-card"
+                    style="background: var(--white); padding: var(--space-lg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); {% if address.is_default %}border: 2px solid var(--primary);{% endif %}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div
+                                style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm);">
+                                <span style="font-weight: 600;">{{ address.label }}</span>
+                                {% if address.is_default %}
+                                <span class="badge"
+                                    style="position: static; background: var(--primary); color: white;">Default</span>
+                                {% endif %}
+                            </div>
+                            <p style="color: var(--gray-700); margin-bottom: var(--space-xs);">{{ address.full_address
+                                }}</p>
+                            <p style="color: var(--gray-600);">{{ address.city }} - {{ address.pincode }}</p>
+                            {% if address.landmark %}
+                            <p style="color: var(--gray-500); font-size: 0.9rem; margin-top: var(--space-xs);">
+                                <i class="fas fa-landmark"></i> {{ address.landmark }}
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div style="display: flex; gap: var(--space-sm);">
+                            <a href="{{ url_for('customer.edit_address', address_id=address.id) }}"
+                                class="btn btn-secondary btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ url_for('customer.delete_address', address_id=address.id) }}" method="POST"
+                                onsubmit="return confirm('Delete this address?');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm"
+                                    style="background: var(--danger); color: white;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>No addresses saved</h3>
+                <p>Add a delivery address to make checkout faster</p>
+                <a href="{{ url_for('customer.add_address') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add Address
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

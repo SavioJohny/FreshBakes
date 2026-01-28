@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmed{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: var(--space-3xl);">
+    <div class="container">
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <div
+                style="width: 100px; height: 100px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-xl); font-size: 3rem; color: white;">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h1 style="color: var(--accent); margin-bottom: var(--space-md);">Order Placed Successfully!</h1>
+            <p style="font-size: 1.1rem; color: var(--gray-600); margin-bottom: var(--space-xl);">
+                Thank you for your order. Your delicious treats are on their way!
+            </p>
+
+            <div class="order-card" style="text-align: left; margin-bottom: var(--space-xl);">
+                <div class="order-header">
+                    <div>
+                        <span class="order-number" style="font-size: 1.25rem;">#{{ order.order_number }}</span>
+                    </div>
+                    <span class="order-status status-{{ order.status }}">{{ order.status.title() }}</span>
+                </div>
+
+                <div class="order-bakery">
+                    <i class="fas fa-store"></i> {{ order.bakery.name }}
+                </div>
+
+                <div style="padding: var(--space-md) 0; border-top: 1px solid var(--gray-100);">
+                    {% for item in order.items %}
+                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-sm);">
+                        <span>{{ item.product_name }} × {{ item.quantity }}</span>
+                        <span>₹{{ '%.0f'|format(item.subtotal) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div style="padding-top: var(--space-md); border-top: 1px solid var(--gray-100);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                        <span>Subtotal</span>
+                        <span>₹{{ '%.0f'|format(order.subtotal) }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                        <span>Delivery Fee</span>
+                        <span>₹{{ '%.0f'|format(order.delivery_fee) }}</span>
+                    </div>
+                    {% if order.discount > 0 %}
+                    <div
+                        style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs); color: var(--accent);">
+                        <span>Discount</span>
+                        <span>-₹{{ '%.0f'|format(order.discount) }}</span>
+                    </div>
+                    {% endif %}
+                    <div
+                        style="display: flex; justify-content: space-between; font-weight: 600; font-size: 1.1rem; margin-top: var(--space-sm);">
+                        <span>Total</span>
+                        <span>₹{{ '%.0f'|format(order.total_amount) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="background: var(--gray-50); padding: var(--space-lg); border-radius: var(--radius-md); margin-bottom: var(--space-xl); text-align: left;">
+                <h4><i class="fas fa-truck"></i> Delivery Details</h4>
+                <p style="margin-top: var(--space-sm);">
+                    {% if order.delivery_address %}
+                    {{ order.delivery_address.full_address }}<br>
+                    {{ order.delivery_address.city }} - {{ order.delivery_address.pincode }}
+                    {% endif %}
+                </p>
+                {% if order.estimated_delivery %}
+                <p style="margin-top: var(--space-sm); color: var(--accent);">
+                    <i class="fas fa-clock"></i> Estimated delivery: {{ order.estimated_delivery.strftime('%I:%M %p') }}
+                </p>
+                {% endif %}
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: var(--space-md); flex-wrap: wrap;">
+                <a href="{{ url_for('orders.order_tracking', order_number=order.order_number) }}"
+                    class="btn btn-primary">
+                    <i class="fas fa-map-marker-alt"></i> Track Order
+                </a>
+                <a href="{{ url_for('main.bakeries') }}" class="btn btn-secondary">
+                    <i class="fas fa-store"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

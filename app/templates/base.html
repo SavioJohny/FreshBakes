@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Local Crust{% endblock %} | Artisan Bakeries</title>
+    <meta name="description"
+        content="{% block meta_description %}Discover and order from the best artisan bakeries near you. Fresh, handmade bakery products delivered to your doorstep.{% endblock %}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('main.index') }}" class="nav-logo">
+                <i class="fas fa-bread-slice"></i>
+                <span>Local Crust</span>
+            </a>
+
+            <div class="nav-search">
+                <form action="{{ url_for('main.search') }}" method="GET">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="q" placeholder="Search bakeries, cakes, pastries..."
+                        value="{{ request.args.get('q', '') }}">
+                </form>
+            </div>
+
+            <div class="nav-links">
+                <a href="{{ url_for('main.bakeries') }}" class="nav-link">
+                    <i class="fas fa-store"></i>
+                    <span>Bakeries</span>
+                </a>
+
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('cart.view_cart') }}" class="nav-link nav-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                    {% if cart_count > 0 %}
+                    <span class="cart-badge">{{ cart_count }}</span>
+                    {% endif %}
+                </a>
+
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-toggle">
+                        <i class="fas fa-user-circle"></i>
+                        <span>{{ current_user.name.split()[0] }}</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        {% if current_user.is_admin() %}
+                        <a href="{{ url_for('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Admin
+                            Dashboard</a>
+                        <div class="dropdown-divider"></div>
+                        {% elif current_user.is_baker() %}
+                        <a href="{{ url_for('baker.dashboard') }}"><i class="fas fa-store-alt"></i> Baker Dashboard</a>
+                        <div class="dropdown-divider"></div>
+                        {% else %}
+                        <a href="{{ url_for('customer.dashboard') }}"><i class="fas fa-home"></i> Dashboard</a>
+                        {% endif %}
+                        <a href="{{ url_for('customer.profile') }}"><i class="fas fa-user"></i> Profile</a>
+                        <a href="{{ url_for('orders.order_history') }}"><i class="fas fa-box"></i> Orders</a>
+                        <a href="{{ url_for('customer.my_reviews') }}"><i class="fas fa-star"></i> My Reviews</a>
+                        <a href="{{ url_for('customer.notifications') }}"><i class="fas fa-bell"></i> Notifications</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ url_for('auth.logout') }}" class="text-danger"><i class="fas fa-sign-out-alt"></i>
+                            Logout</a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="nav-link">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login</span>
+                </a>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">
+                    Sign Up
+                </a>
+                {% endif %}
+            </div>
+
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            <i
+                class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}exclamation-circle{% elif category == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+            <span>{{ message }}</span>
+            <button class="alert-close">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4><i class="fas fa-bread-slice"></i> Local Crust</h4>
+                <p>Connecting you with the finest artisan bakeries in your neighborhood. Fresh, handmade, delivered with
+                    love.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h5>Quick Links</h5>
+                <ul>
+                    <li><a href="{{ url_for('main.bakeries') }}">Browse Bakeries</a></li>
+                    <li><a href="{{ url_for('main.about') }}">About Us</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+                    <li><a href="{{ url_for('main.faq') }}">FAQ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h5>For Bakers</h5>
+                <ul>
+                    <li><a href="{{ url_for('main.become_baker') }}">Become a Partner</a></li>
+                    <li><a href="{{ url_for('auth.register_baker') }}">Register Your Bakery</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h5>Legal</h5>
+                <ul>
+                    <li><a href="{{ url_for('main.terms') }}">Terms of Service</a></li>
+                    <li><a href="{{ url_for('main.privacy') }}">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Local Crust. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

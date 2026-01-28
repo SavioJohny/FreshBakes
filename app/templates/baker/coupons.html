@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Coupons{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'baker/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>Coupons</h1>
+            <a href="{{ url_for('baker.add_coupon') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Coupon
+            </a>
+        </div>
+
+        {% if coupons %}
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Discount</th>
+                        <th>Min Order</th>
+                        <th>Usage</th>
+                        <th>Valid Till</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for coupon in coupons %}
+                    <tr>
+                        <td><strong>{{ coupon.code }}</strong></td>
+                        <td>
+                            {% if coupon.discount_type == 'percentage' %}
+                            {{ coupon.discount_value }}%
+                            {% else %}
+                            ₹{{ '%.0f'|format(coupon.discount_value) }}
+                            {% endif %}
+                        </td>
+                        <td>₹{{ '%.0f'|format(coupon.min_order_amount) }}</td>
+                        <td>{{ coupon.used_count }}/{{ coupon.usage_limit or '∞' }}</td>
+                        <td>{{ coupon.valid_until.strftime('%b %d, %Y') if coupon.valid_until else 'No expiry' }}</td>
+                        <td>
+                            <span class="status-badge {% if coupon.is_active %}open{% else %}closed{% endif %}">
+                                {{ 'Active' if coupon.is_active else 'Inactive' }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('baker.edit_coupon', coupon_id=coupon.id) }}"
+                                class="btn btn-secondary btn-sm" style="margin-right: 4px;">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ url_for('baker.toggle_coupon', coupon_id=coupon.id) }}" method="POST"
+                                style="display: inline;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-{% if coupon.is_active %}pause{% else %}play{% endif %}"></i>
+                                </button>
+                            </form>
+                            <form action="{{ url_for('baker.delete_coupon', coupon_id=coupon.id) }}" method="POST"
+                                style="display: inline;" onsubmit="return confirm('Delete this coupon?');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm"
+                                    style="background: var(--danger); color: white;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-percent"></i>
+            <h3>No coupons yet</h3>
+            <p>Create discount coupons to attract more customers</p>
+            <a href="{{ url_for('baker.add_coupon') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Coupon
+            </a>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

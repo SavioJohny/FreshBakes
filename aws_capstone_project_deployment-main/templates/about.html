@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}About - AWS Capstone Project{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px; margin: 0 auto;">
+    <div class="card p-4">
+        <h1 class="text-center mb-4" style="color: var(--primary-color);">About Us</h1>
+        <p class="lead text-center mb-4" style="font-size: 1.2rem; color: var(--secondary-color);">
+            Welcome to the <strong>AWS Capstone Project Deployment</strong> portal. This platform is designed to bridge
+            the
+            gap between theoretical knowledge and practical cloud implementation.
+        </p>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 2rem 0;">
+
+        <h3>Our Mission</h3>
+        <p class="mb-4">To provide students with a hands-on environment where they can deploy real-world applications
+            using industry-standard AWS services.</p>
+
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h3>Tech Stack Details</h3>
+                <ul style="padding-left: 1.2rem;">
+                    <li class="mb-2"><strong>Frontend:</strong> HTML, CSS, JavaScript for responsive UIs.</li>
+                    <li class="mb-2"><strong>Backend:</strong> Python Flask for robust API logic.</li>
+                    <li class="mb-2"><strong>Cloud Infrastructure:</strong> Amazon Web Services (AWS).</li>
+                </ul>
+            </div>
+
+            <div>
+                <h3>Why AWS?</h3>
+                <p>AWS offers the deepest set of cloud services. Our projects utilize:</p>
+                <ul style="padding-left: 1.2rem;">
+                    <li class="mb-2"><strong>IAM:</strong> Secure access management.</li>
+                    <li class="mb-2"><strong>DynamoDB:</strong> Flexible NoSQL database.</li>
+                    <li class="mb-2"><strong>Amazon SNS:</strong> Managed messaging service.</li>
+                    <li class="mb-2"><strong>Amazon EC2:</strong> Scalable compute capacity.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-heart"></i> About Local Crust</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h2 style="margin-bottom: var(--space-lg);">Our Story</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: var(--space-xl);">
+                Local Crust was born from a simple idea: connecting passionate artisan bakers with customers who
+                appreciate quality, handmade bakery products. We believe that every loaf of bread, every cake, and every
+                pastry has a story – and we're here to help tell those stories.
+            </p>
+
+            <h3 style="margin-bottom: var(--space-md);">Our Mission</h3>
+            <p style="line-height: 1.8; margin-bottom: var(--space-xl);">
+                To support local bakeries by providing them a platform to showcase their craft, while making it easy for
+                customers to discover and enjoy fresh, artisanal baked goods delivered right to their doorstep.
+            </p>
+
+            <div
+                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-xl); margin: var(--space-2xl) 0;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-md);">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h4>50+ Bakeries</h4>
+                    <p style="color: var(--gray-600);">Partner artisan bakeries</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-md);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>10,000+ Customers</h4>
+                    <p style="color: var(--gray-600);">Happy food lovers</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-md);">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <h4>50,000+ Orders</h4>
+                    <p style="color: var(--gray-600);">Delivered with love</p>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: var(--space-md);">Why Choose Us?</h3>
+            <ul style="line-height: 2; margin-bottom: var(--space-xl);">
+                <li><strong>Quality First:</strong> We partner only with bakeries that maintain the highest standards
+                </li>
+                <li><strong>Fresh Delivery:</strong> Products are prepared fresh and delivered promptly</li>
+                <li><strong>Support Local:</strong> Your order directly supports local artisan bakers</li>
+                <li><strong>Easy Ordering:</strong> Simple, hassle-free ordering experience</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section section-cta">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Ready to explore?</h2>
+            <p>Discover amazing bakeries in your neighborhood</p>
+            <a href="{{ url_for('main.bakeries') }}" class="btn btn-light btn-lg">
+                <i class="fas fa-store"></i> Browse Bakeries
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

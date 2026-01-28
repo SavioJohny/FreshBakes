@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Messages{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'admin/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>Contact Messages</h1>
+        </div>
+
+        {% if messages %}
+        <div style="display: grid; gap: var(--space-lg);">
+            {% for message in messages %}
+            <div class="dashboard-section {% if not message.is_read %}border: 2px solid var(--primary);{% endif %}">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <strong>{{ message.name }}</strong>
+                        <span style="color: var(--gray-500); margin-left: var(--space-md);">{{ message.email }}</span>
+                        {% if not message.is_read %}
+                        <span class="badge"
+                            style="position: static; background: var(--primary); color: white; margin-left: var(--space-sm);">New</span>
+                        {% endif %}
+                    </div>
+                    <span style="color: var(--gray-500);">{{ message.created_at.strftime('%b %d, %Y %I:%M %p') }}</span>
+                </div>
+                <h4 style="margin: var(--space-md) 0;">{{ message.subject }}</h4>
+                <p style="color: var(--gray-700);">{{ message.message }}</p>
+                {% if not message.is_read %}
+                <form action="{{ url_for('admin.mark_message_read', message_id=message.id) }}" method="POST"
+                    style="margin-top: var(--space-md);">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-check"></i> Mark as Read
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-envelope"></i>
+            <h3>No messages</h3>
+            <p>Contact form submissions will appear here</p>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

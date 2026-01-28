@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Pending Approvals{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'admin/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>Pending Bakery Approvals</h1>
+        </div>
+
+        {% if bakeries %}
+        <div class="orders-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bakery Name</th>
+                        <th>Owner</th>
+                        <th>City</th>
+                        <th>Applied On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bakery in bakeries %}
+                    <tr>
+                        <td><strong>{{ bakery.name }}</strong></td>
+                        <td>{{ bakery.owner.name }}<br><small>{{ bakery.owner.email }}</small></td>
+                        <td>{{ bakery.city }}</td>
+                        <td>{{ bakery.created_at.strftime('%b %d, %Y') }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.bakery_detail', bakery_id=bakery.id) }}"
+                                class="btn btn-secondary btn-sm">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <form action="{{ url_for('admin.approve_bakery', bakery_id=bakery.id) }}" method="POST"
+                                style="display: inline;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                            </form>
+                            <form action="{{ url_for('admin.reject_bakery', bakery_id=bakery.id) }}" method="POST"
+                                style="display: inline;" onsubmit="return confirm('Reject this bakery application?');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm"
+                                    style="background: var(--danger); color: white;">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-check-circle"></i>
+            <h3>No pending approvals</h3>
+            <p>All bakery applications have been reviewed</p>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

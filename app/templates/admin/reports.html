@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'admin/_sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1>Platform Reports</h1>
+        </div>
+
+        <div class="stats-grid stats-grid-4">
+            <div class="stat-card">
+                <div class="stat-icon users"><i class="fas fa-users"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ total_users }}</span>
+                    <span class="stat-label">Total Users</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bakeries"><i class="fas fa-store"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ total_bakeries }}</span>
+                    <span class="stat-label">Total Bakeries</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orders"><i class="fas fa-box"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">{{ total_orders }}</span>
+                    <span class="stat-label">Total Orders</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon revenue"><i class="fas fa-rupee-sign"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value">₹{{ '%.0f'|format(total_revenue) }}</span>
+                    <span class="stat-label">Total Revenue</span>
+                </div>
+            </div>
+        </div>
+
+        <div
+            style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xl); margin-top: var(--space-xl);">
+            <div class="dashboard-section">
+                <h3><i class="fas fa-store" style="color: var(--primary);"></i> Top Bakeries</h3>
+                {% if top_bakeries %}
+                <div style="margin-top: var(--space-lg);">
+                    {% for bakery, revenue in top_bakeries %}
+                    <div
+                        style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--gray-100);">
+                        <span>{{ bakery.name }}</span>
+                        <span style="font-weight: 600;">₹{{ '%.0f'|format(revenue) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted" style="margin-top: var(--space-md);">No data available</p>
+                {% endif %}
+            </div>
+
+            <div class="dashboard-section">
+                <h3><i class="fas fa-calendar" style="color: var(--primary);"></i> This Month</h3>
+                <div class="quick-stats" style="margin-top: var(--space-lg);">
+                    <div class="quick-stat" style="text-align: left;">
+                        <span class="label">Orders</span>
+                        <span class="value">{{ this_month_orders }}</span>
+                    </div>
+                    <div class="quick-stat" style="text-align: left;">
+                        <span class="label">Revenue</span>
+                        <span class="value">₹{{ '%.0f'|format(this_month_revenue) }}</span>
+                    </div>
+                    <div class="quick-stat" style="text-align: left;">
+                        <span class="label">New Users</span>
+                        <span class="value">{{ new_users }}</span>
+                    </div>
+                    <div class="quick-stat" style="text-align: left;">
+                        <span class="label">New Bakeries</span>
+                        <span class="value">{{ new_bakeries }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
