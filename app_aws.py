@@ -1614,6 +1614,46 @@ def admin_dashboard():
                           recent_orders=recent_orders,
                           new_messages=new_messages)
 
+@app.route('/bakeries/<slug>')
+def bakery_detail(slug):
+    """Public bakery detail page."""
+    try:
+        # Scan for bakery with this slug (Ideally use GSI)
+        response = bakeries_table.scan(
+            FilterExpression=Attr('slug').eq(slug)
+        )
+        items = response.get('Items', [])
+        bakery = items[0] if items else None
+        
+        if not bakery:
+            flash('Bakery not found.', 'error')
+            return redirect(url_for('index'))
+            
+        # Get approved products
+        products_response = products_table.scan(
+            FilterExpression=Attr('bakery_id').eq(bakery['bakery_id']) & Attr('is_available').eq(True)
+        )
+        products = products_response.get('Items', [])
+        
+        # Get reviews
+        try:
+            reviews_response = reviews_table.scan(
+                FilterExpression=Attr('bakery_id').eq(bakery['bakery_id'])
+            )
+            reviews = reviews_response.get('Items', [])
+        except ClientError:
+            reviews = []
+            
+    except ClientError as e:
+        print(f"Error fetching bakery: {e}")
+        flash('Error loading bakery.', 'error')
+        return redirect(url_for('index'))
+    
+    return render_template('main/bakery_detail.html', 
+                          bakery=bakery,
+                          products=products,
+                          reviews=reviews)
+
 @app.route('/admin/bakeries')
 @login_required
 @admin_required
@@ -1648,9 +1688,91 @@ def admin_approve_bakery(bakery_id):
         
         flash('Bakery approved.', 'success')
     except ClientError as e:
-        print(f"Approve bakery error: {e}")
+        print(f"Error approving bakery: {e}")
+        flash('Error approving bakery.', 'error')
+    
+    return redirect(request.referrer or url_for('admin_bakeries'))
+
+@app.route('/admin/bakeries/<bakery_id>/reject', methods=['POST'])
+@login_required
+@admin_required
+def admin_reject_bakery(bakery_id):
+    """Reject bakery (delete it)."""
+    try:
+        # Get bakery name for notification
+        response = bakeries_table.get_item(Key={'bakery_id': bakery_id})
+        bakery = response.get('Item', {})
+        bakery_name = bakery.get('name', 'Unknown')
+        
+        bakeries_table.delete_item(Key={'bakery_id': bakery_id})
+        
+        send_notification("Bakery Rejected", 
+                         f"Bakery '{bakery_name}' has been rejected.")
+        
+        flash('Bakery rejected.', 'success')
+    except ClientError as e:
+        print(f"Error rejecting bakery: {e}")
+        flash('Error rejecting bakery.', 'error')
     
     return redirect(url_for('admin_bakeries'))
+
+@app.route('/admin/bakeries/<bakery_id>/toggle_featured', methods=['POST'])
+@login_required
+@admin_required
+def admin_toggle_featured(bakery_id):
+    """Toggle bakery featured status."""
+    try:
+        # Get current status
+        response = bakeries_table.get_item(Key={'bakery_id': bakery_id})
+        bakery = response.get('Item')
+        
+        if bakery:
+            new_status = not bakery.get('is_featured', False)
+            bakeries_table.update_item(
+                Key={'bakery_id': bakery_id},
+                UpdateExpression='SET is_featured = :f',
+                ExpressionAttributeValues={':f': new_status}
+            )
+            flash(f"Bakery {'featured' if new_status else 'unfeatured'}.", 'success')
+    except ClientError as e:
+        print(f"Error toggling featured status: {e}")
+        flash('Error updating status.', 'error')
+    
+    return redirect(request.referrer or url_for('admin_bakeries'))
+
+@app.route('/admin/bakeries/<bakery_id>')
+@login_required
+@admin_required
+def admin_bakery_detail(bakery_id):
+    """Admin bakery detail view."""
+    try:
+        response = bakeries_table.get_item(Key={'bakery_id': bakery_id})
+        bakery = response.get('Item')
+        
+        if not bakery:
+            flash('Bakery not found.', 'error')
+            return redirect(url_for('admin_bakeries'))
+            
+        # Get counts (using Scan with Filter - optimizing to Query later would be better)
+        products_response = products_table.scan(
+            FilterExpression=Attr('bakery_id').eq(bakery_id)
+        )
+        product_count = len(products_response.get('Items', []))
+        
+        orders_response = orders_table.scan(
+            FilterExpression=Attr('bakery_id').eq(bakery_id)
+        )
+        order_count = len(orders_response.get('Items', []))
+        
+    except ClientError as e:
+        print(f"Error fetching details: {e}")
+        flash('Error loading details.', 'error')
+        return redirect(url_for('admin_bakeries'))
+        
+    return render_template('admin/bakery_detail.html', 
+                          bakery=bakery,
+                          product_count=product_count,
+                          order_count=order_count)
 
 @app.route('/admin/users')
 @login_required

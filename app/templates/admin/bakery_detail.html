@@ -67,7 +67,7 @@
                             <i class="fas fa-box" style="color: var(--primary);"></i>
                         </div>
                         <div class="stat-info">
-                            <span class="stat-value">{{ bakery.products.count() }}</span>
+                            <span class="stat-value">{{ product_count }}</span>
                             <span class="stat-label">Products</span>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                             <i class="fas fa-shopping-bag" style="color: var(--success);"></i>
                         </div>
                         <div class="stat-info">
-                            <span class="stat-value">{{ bakery.orders.count() }}</span>
+                            <span class="stat-value">{{ order_count }}</span>
                             <span class="stat-label">Total Orders</span>
                         </div>
                     </div>
@@ -97,12 +97,12 @@
                 <h3><i class="fas fa-cogs" style="color: var(--primary);"></i> Actions</h3>
                 <div style="display: flex; gap: var(--space-md); margin-top: var(--space-md); flex-wrap: wrap;">
                     {% if not bakery.is_approved %}
-                    <form action="{{ url_for('admin_approve_bakery', bakery_id=bakery.id) }}" method="POST">
+                    <form action="{{ url_for('admin_approve_bakery', bakery_id=bakery.bakery_id) }}" method="POST">
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-check"></i> Approve Bakery
                         </button>
                     </form>
-                    <form action="{{ url_for('admin.reject_bakery', bakery_id=bakery.id) }}" method="POST"
+                    <form action="{{ url_for('admin_reject_bakery', bakery_id=bakery.bakery_id) }}" method="POST"
                         onsubmit="return confirm('Are you sure you want to reject this bakery?');">
                         <button type="submit" class="btn" style="background: var(--danger); color: white;">
                             <i class="fas fa-times"></i> Reject Bakery
@@ -110,7 +110,7 @@
                     </form>
                     {% endif %}
 
-                    <form action="{{ url_for('admin.toggle_featured', bakery_id=bakery.id) }}" method="POST">
+                    <form action="{{ url_for('admin_toggle_featured', bakery_id=bakery.bakery_id) }}" method="POST">
                         <button type="submit" class="btn btn-secondary">
                             <i class="fas fa-crown"></i> {{ 'Unfeature' if bakery.is_featured else 'Feature' }}
                         </button>
