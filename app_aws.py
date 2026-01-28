@@ -1504,17 +1504,53 @@ def admin_dashboard():
         all_bakeries = bakeries_response.get('Items', [])
         all_orders = orders_response.get('Items', [])
         all_products = products_response.get('Items', [])
-    except ClientError:
+        
+        # Calculate statistics for dashboard
+        total_users = len(all_users)
+        total_bakeries = len(all_bakeries)
+        total_orders = len(all_orders)
+        total_products = len(all_products)
+        
+        # Count pending bakeries (not approved)
+        pending_bakeries = len([b for b in all_bakeries if not b.get('is_approved', False)])
+        
+        # Count active users
+        active_users = len([u for u in all_users if u.get('is_active', True)])
+        
+        # Calculate total revenue
+        total_revenue = sum(float(o.get('total_amount', 0)) for o in all_orders)
+        
+        # Get recent orders
+        recent_orders = sorted(all_orders, key=lambda x: x.get('created_at', ''), reverse=True)[:10]
+        
+    except ClientError as e:
+        print(f"Admin dashboard error: {e}")
         all_users = []
         all_bakeries = []
         all_orders = []
         all_products = []
+        total_users = 0
+        total_bakeries = 0
+        total_orders = 0
+        total_products = 0
+        pending_bakeries = 0
+        active_users = 0
+        total_revenue = 0
+        recent_orders = []
     
     return render_template('admin/dashboard.html',
                           users=all_users,
                           bakeries=all_bakeries,
                           orders=all_orders,
-                          products=all_products)
+                          products=all_products,
+                          total_users=total_users,
+                          total_bakeries=total_bakeries,
+                          total_orders=total_orders,
+                          total_products=total_products,
+                          pending_bakeries=pending_bakeries,
+                          active_users=active_users,
+                          total_revenue=total_revenue,
+                          recent_orders=recent_orders)
 
 @app.route('/admin/bakeries')
 @login_required
