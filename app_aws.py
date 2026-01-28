@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
+from decimal import Decimal
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 app.secret_key = os.environ.get('SECRET_KEY', 'production-secret-key-change-this')
@@ -1319,8 +1320,8 @@ def baker_add_coupon():
             'bakery_id': bakery['bakery_id'],
             'code': request.form.get('code', '').upper(),
             'discount_type': request.form.get('discount_type', 'percentage'),
-            'discount_value': float(request.form.get('discount_value', 10)),
-            'min_order_amount': float(request.form.get('min_order_amount', 0)),
+            'discount_value': Decimal(str(request.form.get('discount_value', 10))),
+            'min_order_amount': Decimal(str(request.form.get('min_order_amount', 0))),
             'usage_limit': int(usage_limit) if usage_limit else None,
             'used_count': 0,
             'valid_until': valid_until if valid_until else None,
@@ -1356,6 +1357,27 @@ def baker_settings():
         
         if request.method == 'POST':
             # Update bakery settings
+            # Convert all numeric values to appropriate types for DynamoDB
+            delivery_time = request.form.get('delivery_time_mins', '30')
+            min_order = request.form.get('min_order_amount', '0')
+            delivery_fee = request.form.get('delivery_fee', '0')
+            
+            # Ensure proper type conversion
+            try:
+                delivery_time_int = int(delivery_time) if delivery_time else 30
+            except (ValueError, TypeError):
+                delivery_time_int = 30
+            
+            try:
+                min_order_decimal = Decimal(str(min_order)) if min_order else Decimal('0')
+            except (ValueError, TypeError):
+                min_order_decimal = Decimal('0')
+            
+            try:
+                delivery_fee_decimal = Decimal(str(delivery_fee)) if delivery_fee else Decimal('0')
+            except (ValueError, TypeError):
+                delivery_fee_decimal = Decimal('0')
+            
             update_expr = 'SET #n = :n, description = :desc, phone = :phone, email = :email, address = :addr, city = :city, pincode = :pin, delivery_time_mins = :dt, min_order_amount = :mo, delivery_fee = :df'
             expr_names = {'#n': 'name'}
             expr_values = {
@@ -1366,9 +1388,9 @@ def baker_settings():
                 ':addr': request.form.get('address', ''),
                 ':city': request.form.get('city', ''),
                 ':pin': request.form.get('pincode', ''),
-                ':dt': int(request.form.get('delivery_time_mins', 30)),
-                ':mo': float(request.form.get('min_order_amount', 0)),
-                ':df': float(request.form.get('delivery_fee', 0))
+                ':dt': delivery_time_int,
+                ':mo': min_order_decimal,
+                ':df': delivery_fee_decimal
             }
             
             bakeries_table.update_item(
@@ -1626,3 +1648,5 @@ if __name__ == '__main__':
     print("=" * 60)
     
     app.run(host='0.0.0.0', port=5000, debug=True)
+
+
