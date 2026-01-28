@@ -1046,15 +1046,33 @@ def admin_orders():
 
 # ==================== CUSTOMER PROFILE ROUTES ====================
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     """User profile page."""
+    user_email = session['user_email']
     user = get_current_user()
+    
+    if request.method == 'POST':
+        try:
+            users_table.update_item(
+                Key={'email': user_email},
+                UpdateExpression='SET #n = :n, phone = :p',
+                ExpressionAttributeNames={'#n': 'name'},
+                ExpressionAttributeValues={
+                    ':n': request.form.get('name', user.get('name', '')),
+                    ':p': request.form.get('phone', user.get('phone', ''))
+                }
+            )
+            flash('Profile updated successfully!', 'success')
+            return redirect(url_for('profile'))
+        except ClientError as e:
+            print(f"Edit profile error: {e}")
+            flash('Error updating profile.', 'danger')
     
     try:
         response = addresses_table.scan(
-            FilterExpression=Attr('user_email').eq(session['user_email'])
+            FilterExpression=Attr('user_email').eq(user_email)
         )
         user_addresses = response.get('Items', [])
     except ClientError:
