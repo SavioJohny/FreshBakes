@@ -1293,7 +1293,7 @@ def baker_coupons():
                           bakery=bakery,
                           coupons=[])
 
-@app.route('/baker/settings')
+@app.route('/baker/settings', methods=['GET', 'POST'])
 @login_required
 @baker_required
 def baker_settings():
@@ -1309,7 +1309,36 @@ def baker_settings():
         if not bakeries_list:
             return redirect(url_for('baker_dashboard'))
         bakery = bakeries_list[0]
-    except ClientError:
+        
+        if request.method == 'POST':
+            # Update bakery settings
+            update_expr = 'SET #n = :n, description = :desc, phone = :phone, email = :email, address = :addr, city = :city, pincode = :pin, delivery_time_mins = :dt, min_order_amount = :mo, delivery_fee = :df'
+            expr_names = {'#n': 'name'}
+            expr_values = {
+                ':n': request.form.get('name', bakery.get('name', '')),
+                ':desc': request.form.get('description', ''),
+                ':phone': request.form.get('phone', ''),
+                ':email': request.form.get('email', ''),
+                ':addr': request.form.get('address', ''),
+                ':city': request.form.get('city', ''),
+                ':pin': request.form.get('pincode', ''),
+                ':dt': int(request.form.get('delivery_time_mins', 30)),
+                ':mo': float(request.form.get('min_order_amount', 0)),
+                ':df': float(request.form.get('delivery_fee', 0))
+            }
+            
+            bakeries_table.update_item(
+                Key={'bakery_id': bakery['bakery_id']},
+                UpdateExpression=update_expr,
+                ExpressionAttributeNames=expr_names,
+                ExpressionAttributeValues=expr_values
+            )
+            
+            flash('Settings updated successfully!', 'success')
+            return redirect(url_for('baker_settings'))
+            
+    except ClientError as e:
+        print(f"Baker settings error: {e}")
         bakery = {}
     
     return render_template('baker/profile.html',
