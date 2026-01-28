@@ -11,7 +11,7 @@
     <main class="dashboard-main">
         <div class="dashboard-header">
             <h1>Coupons</h1>
-            <a href="{{ url_for('baker.add_coupon') }}" class="btn btn-primary">
+            <a href="{{ url_for('baker_coupons') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Create Coupon
             </a>
         </div>
@@ -50,19 +50,18 @@
                             </span>
                         </td>
                         <td>
-                            <a href="{{ url_for('baker.edit_coupon', coupon_id=coupon.id) }}"
-                                class="btn btn-secondary btn-sm" style="margin-right: 4px;">
+                            <a href="{{ url_for('baker_coupons') }}" class="btn btn-secondary btn-sm"
+                                style="margin-right: 4px;">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ url_for('baker.toggle_coupon', coupon_id=coupon.id) }}" method="POST"
-                                style="display: inline;">
-<button type="submit" class="btn btn-secondary btn-sm">
+                            <form action="{{ url_for('baker_coupons') }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-secondary btn-sm">
                                     <i class="fas fa-{% if coupon.is_active %}pause{% else %}play{% endif %}"></i>
                                 </button>
                             </form>
-                            <form action="{{ url_for('baker.delete_coupon', coupon_id=coupon.id) }}" method="POST"
-                                style="display: inline;" onsubmit="return confirm('Delete this coupon?');">
-<button type="submit" class="btn btn-sm"
+                            <form action="{{ url_for('baker_coupons') }}" method="POST" style="display: inline;"
+                                onsubmit="return confirm('Delete this coupon?');">
+                                <button type="submit" class="btn btn-sm"
                                     style="background: var(--danger); color: white;">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -78,7 +77,7 @@
             <i class="fas fa-percent"></i>
             <h3>No coupons yet</h3>
             <p>Create discount coupons to attract more customers</p>
-            <a href="{{ url_for('baker.add_coupon') }}" class="btn btn-primary">
+            <a href="{{ url_for('baker_coupons') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Create Coupon
             </a>
         </div>
