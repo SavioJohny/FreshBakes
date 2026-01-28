@@ -783,6 +783,20 @@ def baker_dashboard():
         )
         bakery_products = products_response.get('Items', [])
         
+        # Calculate dashboard stats
+        today = datetime.utcnow().strftime('%Y-%m-%d')
+        today_orders_list = [o for o in bakery_orders if o.get('created_at', '').startswith(today)]
+        today_orders = len(today_orders_list)
+        today_revenue = sum(float(o.get('total_amount', 0)) for o in today_orders_list)
+        total_products = len(bakery_products)
+        total_orders = len(bakery_orders)
+        
+        # Get pending orders
+        pending_orders = [o for o in bakery_orders if o.get('status') == 'pending']
+        
+        # Get recent orders (sorted by created_at, limit to 10)
+        recent_orders = sorted(bakery_orders, key=lambda x: x.get('created_at', ''), reverse=True)[:10]
+        
     except ClientError as e:
         print(f"Baker dashboard error: {e}")
         return "Error loading dashboard", 500
@@ -790,7 +804,13 @@ def baker_dashboard():
     return render_template('baker/dashboard.html',
                           bakery=bakery,
                           orders=bakery_orders,
-                          products=bakery_products)
+                          products=bakery_products,
+                          today_orders=today_orders,
+                          today_revenue=today_revenue,
+                          total_products=total_products,
+                          total_orders=total_orders,
+                          pending_orders=pending_orders,
+                          recent_orders=recent_orders)
 
 @app.route('/baker/products')
 @login_required
