@@ -20,23 +20,23 @@
             class="nav-item {% if 'product' in request.endpoint %}active{% endif %}">
             <i class="fas fa-bread-slice"></i> Products
         </a>
-        <a href="{{ url_for('baker_products') }}"
+        <a href="{{ url_for('baker_categories') }}"
             class="nav-item {% if 'categor' in request.endpoint %}active{% endif %}">
             <i class="fas fa-tags"></i> Categories
         </a>
-        <a href="{{ url_for('baker_dashboard') }}"
+        <a href="{{ url_for('baker_reviews') }}"
             class="nav-item {% if 'review' in request.endpoint %}active{% endif %}">
             <i class="fas fa-star"></i> Reviews
         </a>
-        <a href="{{ url_for('baker_dashboard') }}"
+        <a href="{{ url_for('baker_analytics') }}"
             class="nav-item {% if 'analytics' in request.endpoint %}active{% endif %}">
             <i class="fas fa-chart-line"></i> Analytics
         </a>
-        <a href="{{ url_for('baker_dashboard') }}"
+        <a href="{{ url_for('baker_coupons') }}"
             class="nav-item {% if 'coupon' in request.endpoint %}active{% endif %}">
             <i class="fas fa-percent"></i> Coupons
         </a>
-        <a href="{{ url_for('baker_dashboard') }}"
+        <a href="{{ url_for('baker_settings') }}"
             class="nav-item {% if 'profile' in request.endpoint %}active{% endif %}">
             <i class="fas fa-cog"></i> Settings
         </a>

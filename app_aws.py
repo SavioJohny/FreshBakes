@@ -1035,6 +1035,145 @@ def baker_delete_product(product_id):
     
     return redirect(url_for('baker_products'))
 
+@app.route('/baker/categories')
+@login_required
+@baker_required
+def baker_categories():
+    """Baker categories management."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            return redirect(url_for('baker_dashboard'))
+        bakery = bakeries_list[0]
+        
+        cat_response = categories_table.scan(
+            FilterExpression=Attr('bakery_id').eq(bakery['bakery_id'])
+        )
+        bakery_categories = cat_response.get('Items', [])
+    except ClientError:
+        bakery = {}
+        bakery_categories = []
+    
+    return render_template('baker/categories.html',
+                          bakery=bakery,
+                          categories=bakery_categories)
+
+@app.route('/baker/reviews')
+@login_required
+@baker_required
+def baker_reviews():
+    """Baker reviews management."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            return redirect(url_for('baker_dashboard'))
+        bakery = bakeries_list[0]
+        
+        rev_response = reviews_table.scan(
+            FilterExpression=Attr('bakery_id').eq(bakery['bakery_id'])
+        )
+        bakery_reviews = rev_response.get('Items', [])
+    except ClientError:
+        bakery = {}
+        bakery_reviews = []
+    
+    return render_template('baker/reviews.html',
+                          bakery=bakery,
+                          reviews=bakery_reviews)
+
+@app.route('/baker/analytics')
+@login_required
+@baker_required
+def baker_analytics():
+    """Baker analytics page."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            return redirect(url_for('baker_dashboard'))
+        bakery = bakeries_list[0]
+        
+        # Get orders for analytics
+        orders_response = orders_table.scan(
+            FilterExpression=Attr('bakery_id').eq(bakery['bakery_id'])
+        )
+        bakery_orders = orders_response.get('Items', [])
+        
+        # Calculate basic analytics
+        total_revenue = sum(float(o.get('total_amount', 0)) for o in bakery_orders)
+        total_orders = len(bakery_orders)
+    except ClientError:
+        bakery = {}
+        bakery_orders = []
+        total_revenue = 0
+        total_orders = 0
+    
+    return render_template('baker/analytics.html',
+                          bakery=bakery,
+                          orders=bakery_orders,
+                          total_revenue=total_revenue,
+                          total_orders=total_orders)
+
+@app.route('/baker/coupons')
+@login_required
+@baker_required
+def baker_coupons():
+    """Baker coupons management."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            return redirect(url_for('baker_dashboard'))
+        bakery = bakeries_list[0]
+    except ClientError:
+        bakery = {}
+    
+    # Coupons table not implemented yet - return empty list
+    return render_template('baker/coupons.html',
+                          bakery=bakery,
+                          coupons=[])
+
+@app.route('/baker/settings')
+@login_required
+@baker_required
+def baker_settings():
+    """Baker settings/profile page."""
+    user_email = session['user_email']
+    user = get_current_user()
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            return redirect(url_for('baker_dashboard'))
+        bakery = bakeries_list[0]
+    except ClientError:
+        bakery = {}
+    
+    return render_template('baker/profile.html',
+                          bakery=bakery,
+                          user=user)
+
 # ==================== ADMIN ROUTES ====================
 
 @app.route('/admin/dashboard')
