@@ -35,7 +35,7 @@
                         <td>{{ category.product_count|default(0) }}</td>
                         <td>
                             <button class="btn btn-secondary btn-sm"
-                                onclick="editCategory({{ category.id }}, '{{ category.name }}')">
+                                onclick="editCategory('{{ category.category_id }}', '{{ category.name }}')">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <form action="{{ url_for('baker_delete_category', category_id=category.category_id) }}"

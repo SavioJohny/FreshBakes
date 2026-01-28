@@ -1097,6 +1097,46 @@ def baker_add_category():
     
     return redirect(url_for('baker_categories'))
 
+@app.route('/baker/category/<category_id>/edit', methods=['POST'])
+@login_required
+@baker_required
+def baker_edit_category(category_id):
+    """Edit a category."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            flash('Bakery not found.', 'danger')
+            return redirect(url_for('baker_categories'))
+        bakery = bakeries_list[0]
+        
+        # Verify category belongs to this bakery
+        cat_response = categories_table.get_item(Key={'category_id': category_id})
+        category = cat_response.get('Item')
+        
+        if category and category.get('bakery_id') == bakery['bakery_id']:
+            new_name = request.form.get('name', category.get('name'))
+            is_active = request.form.get('is_active') == 'on'
+            
+            categories_table.update_item(
+                Key={'category_id': category_id},
+                UpdateExpression='SET #n = :n, is_active = :a',
+                ExpressionAttributeNames={'#n': 'name'},
+                ExpressionAttributeValues={':n': new_name, ':a': is_active}
+            )
+            flash('Category updated.', 'success')
+        else:
+            flash('Category not found.', 'danger')
+    except ClientError as e:
+        print(f"Edit category error: {e}")
+        flash('Error updating category.', 'danger')
+    
+    return redirect(url_for('baker_categories'))
+
 @app.route('/baker/categories/<category_id>/delete', methods=['POST'])
 @login_required
 @baker_required
