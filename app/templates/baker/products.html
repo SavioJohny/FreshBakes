@@ -46,7 +46,8 @@
                             <span style="text-decoration: line-through; color: var(--gray-500);">₹{{
                                 '%.0f'|format(product.price|float) }}</span>
                             {% endif %}
-                            ₹{{ '%.0f'|format(product.current_price|float) }}
+                            ₹{{ '%.0f'|format((product.discount_price if product.discount_price else
+                            product.price)|float) }}
                         </td>
                         <td>{{ product.stock_quantity }}</td>
                         <td>
