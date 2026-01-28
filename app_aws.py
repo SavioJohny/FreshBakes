@@ -1512,16 +1512,34 @@ def admin_dashboard():
         total_products = len(all_products)
         
         # Count pending bakeries (not approved)
-        pending_bakeries = len([b for b in all_bakeries if not b.get('is_approved', False)])
+        pending_bakeries_list = [b for b in all_bakeries if not b.get('is_approved', False)]
+        pending_bakeries = len(pending_bakeries_list)
+        pending_approvals = pending_bakeries_list[:5]  # First 5 for display
+        
+        # Count approved bakeries
+        approved_bakeries = len([b for b in all_bakeries if b.get('is_approved', False)])
         
         # Count active users
         active_users = len([u for u in all_users if u.get('is_active', True)])
         
+        # Count customers and bakers
+        total_customers = len([u for u in all_users if u.get('role') == 'customer'])
+        total_bakers = len([u for u in all_users if u.get('role') == 'baker'])
+        
         # Calculate total revenue
         total_revenue = sum(float(o.get('total_amount', 0)) for o in all_orders)
         
+        # Today's statistics
+        today = datetime.utcnow().strftime('%Y-%m-%d')
+        today_orders_list = [o for o in all_orders if o.get('created_at', '').startswith(today)]
+        today_orders = len(today_orders_list)
+        today_revenue = sum(float(o.get('total_amount', 0)) for o in today_orders_list)
+        
         # Get recent orders
         recent_orders = sorted(all_orders, key=lambda x: x.get('created_at', ''), reverse=True)[:10]
+        
+        # Messages count (placeholder - not implemented yet)
+        new_messages = 0
         
     except ClientError as e:
         print(f"Admin dashboard error: {e}")
@@ -1534,9 +1552,16 @@ def admin_dashboard():
         total_orders = 0
         total_products = 0
         pending_bakeries = 0
+        pending_approvals = []
+        approved_bakeries = 0
         active_users = 0
+        total_customers = 0
+        total_bakers = 0
         total_revenue = 0
+        today_orders = 0
+        today_revenue = 0
         recent_orders = []
+        new_messages = 0
     
     return render_template('admin/dashboard.html',
                           users=all_users,
@@ -1548,9 +1573,16 @@ def admin_dashboard():
                           total_orders=total_orders,
                           total_products=total_products,
                           pending_bakeries=pending_bakeries,
+                          pending_approvals=pending_approvals,
+                          approved_bakeries=approved_bakeries,
                           active_users=active_users,
+                          total_customers=total_customers,
+                          total_bakers=total_bakers,
                           total_revenue=total_revenue,
-                          recent_orders=recent_orders)
+                          today_orders=today_orders,
+                          today_revenue=today_revenue,
+                          recent_orders=recent_orders,
+                          new_messages=new_messages)
 
 @app.route('/admin/bakeries')
 @login_required
