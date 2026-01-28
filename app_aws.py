@@ -951,6 +951,70 @@ def baker_update_order(order_number):
     
     return redirect(url_for('baker_orders'))
 
+@app.route('/baker/toggle-status', methods=['POST'])
+@login_required
+@baker_required
+def baker_toggle_status():
+    """Toggle bakery open/closed status."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if bakeries_list:
+            bakery = bakeries_list[0]
+            new_status = not bakery.get('is_open', True)
+            
+            bakeries_table.update_item(
+                Key={'bakery_id': bakery['bakery_id']},
+                UpdateExpression='SET is_open = :s',
+                ExpressionAttributeValues={':s': new_status}
+            )
+            
+            status_text = 'open' if new_status else 'closed'
+            flash(f"Your bakery is now {status_text}.", 'success')
+    except ClientError as e:
+        print(f"Toggle status error: {e}")
+        flash('Error updating status.', 'danger')
+    
+    return redirect(url_for('baker_dashboard'))
+
+@app.route('/baker/products/<product_id>/delete', methods=['POST'])
+@login_required
+@baker_required
+def baker_delete_product(product_id):
+    """Delete a product."""
+    user_email = session['user_email']
+    
+    try:
+        # Verify product belongs to baker's bakery
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            flash('Bakery not found.', 'danger')
+            return redirect(url_for('baker_products'))
+        
+        bakery = bakeries_list[0]
+        
+        # Check product belongs to this bakery
+        prod_response = products_table.get_item(Key={'product_id': product_id})
+        product = prod_response.get('Item')
+        
+        if product and product.get('bakery_id') == bakery['bakery_id']:
+            products_table.delete_item(Key={'product_id': product_id})
+            flash('Product deleted successfully.', 'success')
+        else:
+            flash('Product not found.', 'danger')
+    except ClientError as e:
+        print(f"Delete product error: {e}")
+        flash('Error deleting product.', 'danger')
+    
+    return redirect(url_for('baker_products'))
+
 # ==================== ADMIN ROUTES ====================
 
 @app.route('/admin/dashboard')
@@ -1030,6 +1094,31 @@ def admin_users():
         all_users = []
     
     return render_template('admin/users.html', users=all_users)
+
+@app.route('/admin/users/<user_email>/toggle', methods=['POST'])
+@login_required
+@admin_required
+def admin_toggle_user(user_email):
+    """Toggle user active status."""
+    try:
+        response = users_table.get_item(Key={'email': user_email})
+        user = response.get('Item')
+        
+        if user:
+            new_status = not user.get('is_active', True)
+            users_table.update_item(
+                Key={'email': user_email},
+                UpdateExpression='SET is_active = :a',
+                ExpressionAttributeValues={':a': new_status}
+            )
+            
+            status_text = 'activated' if new_status else 'deactivated'
+            flash(f"User {user.get('name', user_email)} has been {status_text}.", 'success')
+    except ClientError as e:
+        print(f"Toggle user error: {e}")
+        flash('Error updating user status.', 'danger')
+    
+    return redirect(url_for('admin_users'))
 
 @app.route('/admin/orders')
 @login_required

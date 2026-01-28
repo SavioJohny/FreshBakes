@@ -17,15 +17,15 @@
         <div class="filters-bar" style="margin-bottom: var(--space-xl);">
             <a href="{{ url_for('baker_orders') }}"
                 class="btn {% if not status_filter %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">All</a>
-            <a href="{{ url_for('baker.orders', status='pending') }}"
+            <a href="{{ url_for('baker_orders', status='pending') }}"
                 class="btn {% if status_filter == 'pending' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Pending</a>
-            <a href="{{ url_for('baker.orders', status='confirmed') }}"
+            <a href="{{ url_for('baker_orders', status='confirmed') }}"
                 class="btn {% if status_filter == 'confirmed' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Confirmed</a>
-            <a href="{{ url_for('baker.orders', status='preparing') }}"
+            <a href="{{ url_for('baker_orders', status='preparing') }}"
                 class="btn {% if status_filter == 'preparing' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Preparing</a>
-            <a href="{{ url_for('baker.orders', status='ready') }}"
+            <a href="{{ url_for('baker_orders', status='ready') }}"
                 class="btn {% if status_filter == 'ready' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Ready</a>
-            <a href="{{ url_for('baker.orders', status='delivered') }}"
+            <a href="{{ url_for('baker_orders', status='delivered') }}"
                 class="btn {% if status_filter == 'delivered' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Delivered</a>
         </div>
 
@@ -54,8 +54,7 @@
                                 ').title() }}</span></td>
                         <td>{{ order.created_at.strftime('%b %d, %I:%M %p') }}</td>
                         <td>
-                            <a href="{{ url_for('baker_orders', order_id=order.id) }}"
-                                class="btn btn-sm btn-primary">
+                            <a href="{{ url_for('baker_orders', order_id=order.id) }}" class="btn btn-sm btn-primary">
                                 View
                             </a>
                         </td>

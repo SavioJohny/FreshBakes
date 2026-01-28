@@ -33,11 +33,11 @@
             class="nav-item {% if request.endpoint == 'admin.coupons' %}active{% endif %}">
             <i class="fas fa-percent"></i> Coupons
         </a>
-        <a href="{{ url_for('admin.messages') }}"
+        <a href="{{ url_for('admin_dashboard') }}"
             class="nav-item {% if 'message' in request.endpoint %}active{% endif %}">
             <i class="fas fa-envelope"></i> Messages
         </a>
-        <a href="{{ url_for('admin.reports') }}"
+        <a href="{{ url_for('admin_dashboard') }}"
             class="nav-item {% if 'report' in request.endpoint %}active{% endif %}">
             <i class="fas fa-chart-bar"></i> Reports
         </a>

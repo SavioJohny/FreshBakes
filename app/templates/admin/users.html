@@ -17,11 +17,11 @@
         <div class="filters-bar" style="margin-bottom: var(--space-xl);">
             <a href="{{ url_for('admin_users') }}"
                 class="btn {% if not role_filter %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">All</a>
-            <a href="{{ url_for('admin.users', role='customer') }}"
+            <a href="{{ url_for('admin_users', role='customer') }}"
                 class="btn {% if role_filter == 'customer' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Customers</a>
-            <a href="{{ url_for('admin.users', role='baker') }}"
+            <a href="{{ url_for('admin_users', role='baker') }}"
                 class="btn {% if role_filter == 'baker' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Bakers</a>
-            <a href="{{ url_for('admin.users', role='admin') }}"
+            <a href="{{ url_for('admin_users', role='admin') }}"
                 class="btn {% if role_filter == 'admin' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">Admins</a>
         </div>
 
@@ -58,9 +58,9 @@
                             </span>
                         </td>
                         <td>
-                            <form action="{{ url_for('admin.toggle_user_status', user_id=user.id) }}" method="POST"
+                            <form action="{{ url_for('admin_toggle_user', user_email=user.email) }}" method="POST"
                                 style="display: inline;">
-<button type="submit"
+                                <button type="submit"
                                     class="btn btn-sm {% if user.is_active %}btn-danger{% else %}btn-success{% endif %}">
                                     <i class="fas fa-{% if user.is_active %}ban{% else %}check{% endif %}"></i>
                                 </button>
