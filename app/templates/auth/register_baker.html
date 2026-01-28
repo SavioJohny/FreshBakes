@@ -10,58 +10,44 @@
         <div class="auth-header">
             <a href="{{ url_for('index') }}" class="auth-logo">
                 <i class="fas fa-bread-slice"></i>
-                <span>Local Crust</span>
+                <span>FreshBakes</span>
             </a>
-            <h1>Partner with Local Crust</h1>
+            <h1>Partner with FreshBakes</h1>
             <p>Register your bakery and reach thousands of customers</p>
         </div>
 
         <form method="POST" class="auth-form">
-            {{ form.hidden_tag() }}
-
             <h3 class="form-section-title"><i class="fas fa-user"></i> Your Details</h3>
 
             <div class="form-row-2">
                 <div class="form-group">
                     <label for="name">Full Name *</label>
-                    {{ form.name(class="form-control", placeholder="Your full name") }}
-                    {% if form.name.errors %}
-                    <span class="form-error">{{ form.name.errors[0] }}</span>
-                    {% endif %}
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Your full name" required>
                 </div>
 
                 <div class="form-group">
                     <label for="phone">Phone Number *</label>
-                    {{ form.phone(class="form-control", placeholder="10-digit phone") }}
-                    {% if form.phone.errors %}
-                    <span class="form-error">{{ form.phone.errors[0] }}</span>
-                    {% endif %}
+                    <input type="tel" name="phone" id="phone" class="form-control" placeholder="10-digit phone"
+                        required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="email">Email *</label>
-                {{ form.email(class="form-control", placeholder="your@email.com") }}
-                {% if form.email.errors %}
-                <span class="form-error">{{ form.email.errors[0] }}</span>
-                {% endif %}
+                <input type="email" name="email" id="email" class="form-control" placeholder="your@email.com" required>
             </div>
 
             <div class="form-row-2">
                 <div class="form-group">
                     <label for="password">Password *</label>
-                    {{ form.password(class="form-control", placeholder="Min. 6 characters") }}
-                    {% if form.password.errors %}
-                    <span class="form-error">{{ form.password.errors[0] }}</span>
-                    {% endif %}
+                    <input type="password" name="password" id="password" class="form-control"
+                        placeholder="Min. 6 characters" required>
                 </div>
 
                 <div class="form-group">
                     <label for="confirm_password">Confirm Password *</label>
-                    {{ form.confirm_password(class="form-control", placeholder="Confirm password") }}
-                    {% if form.confirm_password.errors %}
-                    <span class="form-error">{{ form.confirm_password.errors[0] }}</span>
-                    {% endif %}
+                    <input type="password" name="confirm_password" id="confirm_password" class="form-control"
+                        placeholder="Confirm password" required>
                 </div>
             </div>
 
@@ -69,46 +55,30 @@
 
             <div class="form-group">
                 <label for="bakery_name">Bakery Name *</label>
-                {{ form.bakery_name(class="form-control", placeholder="Your bakery's name") }}
-                {% if form.bakery_name.errors %}
-                <span class="form-error">{{ form.bakery_name.errors[0] }}</span>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="bakery_description">Description</label>
-                {{ form.bakery_description(class="form-control", rows="3", placeholder="Tell customers about your
-                bakery...") }}
+                <input type="text" name="bakery_name" id="bakery_name" class="form-control"
+                    placeholder="Your bakery's name" required>
             </div>
 
             <div class="form-group">
                 <label for="bakery_address">Address *</label>
-                {{ form.bakery_address(class="form-control", placeholder="Full bakery address") }}
-                {% if form.bakery_address.errors %}
-                <span class="form-error">{{ form.bakery_address.errors[0] }}</span>
-                {% endif %}
+                <input type="text" name="bakery_address" id="bakery_address" class="form-control"
+                    placeholder="Full bakery address" required>
             </div>
 
             <div class="form-row-3">
                 <div class="form-group">
                     <label for="city">City *</label>
-                    {{ form.city(class="form-control", placeholder="City") }}
-                    {% if form.city.errors %}
-                    <span class="form-error">{{ form.city.errors[0] }}</span>
-                    {% endif %}
+                    <input type="text" name="city" id="city" class="form-control" placeholder="City" required>
                 </div>
 
                 <div class="form-group">
                     <label for="pincode">Pincode *</label>
-                    {{ form.pincode(class="form-control", placeholder="Pincode") }}
-                    {% if form.pincode.errors %}
-                    <span class="form-error">{{ form.pincode.errors[0] }}</span>
-                    {% endif %}
+                    <input type="text" name="pincode" id="pincode" class="form-control" placeholder="Pincode" required>
                 </div>
 
                 <div class="form-group">
                     <label for="bakery_phone">Bakery Phone</label>
-                    {{ form.bakery_phone(class="form-control", placeholder="Optional") }}
+                    <input type="tel" name="bakery_phone" id="bakery_phone" class="form-control" placeholder="Optional">
                 </div>
             </div>
 
