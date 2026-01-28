@@ -38,10 +38,10 @@
                                 onclick="editCategory({{ category.id }}, '{{ category.name }}')">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <form action="{{ url_for('baker.delete_category', category_id=category.id) }}" method="POST"
-                                style="display: inline;"
+                            <form action="{{ url_for('baker_delete_category', category_id=category.category_id) }}"
+                                method="POST" style="display: inline;"
                                 onsubmit="return confirm('Delete this category? Products will become uncategorized.');">
-<button type="submit" class="btn btn-sm"
+                                <button type="submit" class="btn btn-sm"
                                     style="background: var(--danger); color: white;">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -67,8 +67,8 @@
     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
     <div style="background: white; padding: var(--space-xl); border-radius: var(--radius-lg); width: 400px;">
         <h3 style="margin-bottom: var(--space-lg);">Add Category</h3>
-        <form action="{{ url_for('baker_products') }}" method="POST">
-<div class="form-group">
+        <form action="{{ url_for('baker_add_category') }}" method="POST">
+            <div class="form-group">
                 <label>Category Name *</label>
                 <input type="text" name="name" class="form-control" required>
             </div>

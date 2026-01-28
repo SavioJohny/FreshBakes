@@ -1063,6 +1063,72 @@ def baker_categories():
                           bakery=bakery,
                           categories=bakery_categories)
 
+@app.route('/baker/categories/add', methods=['POST'])
+@login_required
+@baker_required
+def baker_add_category():
+    """Add a new category."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            flash('Bakery not found.', 'danger')
+            return redirect(url_for('baker_categories'))
+        bakery = bakeries_list[0]
+        
+        category_id = str(uuid.uuid4())
+        categories_table.put_item(Item={
+            'category_id': category_id,
+            'bakery_id': bakery['bakery_id'],
+            'name': request.form.get('name', 'New Category'),
+            'display_order': 0,
+            'is_active': True,
+            'created_at': datetime.utcnow().isoformat()
+        })
+        
+        flash('Category added successfully!', 'success')
+    except ClientError as e:
+        print(f"Add category error: {e}")
+        flash('Error adding category.', 'danger')
+    
+    return redirect(url_for('baker_categories'))
+
+@app.route('/baker/categories/<category_id>/delete', methods=['POST'])
+@login_required
+@baker_required
+def baker_delete_category(category_id):
+    """Delete a category."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            flash('Bakery not found.', 'danger')
+            return redirect(url_for('baker_categories'))
+        bakery = bakeries_list[0]
+        
+        # Verify category belongs to this bakery
+        cat_response = categories_table.get_item(Key={'category_id': category_id})
+        category = cat_response.get('Item')
+        
+        if category and category.get('bakery_id') == bakery['bakery_id']:
+            categories_table.delete_item(Key={'category_id': category_id})
+            flash('Category deleted.', 'success')
+        else:
+            flash('Category not found.', 'danger')
+    except ClientError as e:
+        print(f"Delete category error: {e}")
+        flash('Error deleting category.', 'danger')
+    
+    return redirect(url_for('baker_categories'))
+
 @app.route('/baker/reviews')
 @login_required
 @baker_required
