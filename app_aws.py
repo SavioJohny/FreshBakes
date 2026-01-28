@@ -36,7 +36,7 @@ order_items_table = dynamodb.Table('FreshBakes_OrderItems')
 reviews_table = dynamodb.Table('FreshBakes_Reviews')
 
 # SNS Topic ARN - Replace with your actual SNS Topic ARN
-SNS_TOPIC_ARN = os.environ.get('SNS_TOPIC_ARN', 'arn:aws:sns:us-east-1:307946664606:FreshBakes:15436347-41c6-430e-b411-4c0464089e85')
+SNS_TOPIC_ARN = os.environ.get('SNS_TOPIC_ARN', 'arn:aws:sns:us-east-1:307946664606:FreshBakes')
 
 # Configuration for File Uploads
 UPLOAD_FOLDER = 'app/static/images'
