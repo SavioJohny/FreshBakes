@@ -69,8 +69,10 @@
                         {% elif current_user.role == 'baker' %}
                         <a href="{{ url_for('baker_dashboard') }}"><i class="fas fa-store-alt"></i> Baker Dashboard</a>
                         <div class="dropdown-divider"></div>
+                        {% else %}
+                        <a href="{{ url_for('customer_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a>
                         {% endif %}
-                        <a href="{{ url_for('profile') }}"><i class="fas fa-user"></i> Profile</a>
+                        <a href="{{ url_for('customer_profile') }}"><i class="fas fa-user"></i> Profile</a>
                         <a href="{{ url_for('order_history') }}"><i class="fas fa-box"></i> Orders</a>
                         <div class="dropdown-divider"></div>
                         <a href="{{ url_for('logout') }}" class="text-danger"><i class="fas fa-sign-out-alt"></i>
