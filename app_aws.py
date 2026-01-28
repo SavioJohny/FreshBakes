@@ -916,6 +916,82 @@ def baker_add_product():
                           bakery=bakery,
                           categories=bakery_categories)
 
+@app.route('/baker/products/<product_id>/edit', methods=['GET', 'POST'])
+@login_required
+@baker_required
+def baker_edit_product(product_id):
+    """Edit a product."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            return redirect(url_for('baker_products'))
+        bakery = bakeries_list[0]
+        
+        # Get the product
+        prod_response = products_table.get_item(Key={'product_id': product_id})
+        product = prod_response.get('Item')
+        
+        if not product or product.get('bakery_id') != bakery['bakery_id']:
+            flash('Product not found.', 'danger')
+            return redirect(url_for('baker_products'))
+        
+        if request.method == 'POST':
+            # Handle image upload
+            image_filename = product.get('image_url', '')
+            if 'image' in request.files:
+                image = request.files['image']
+                if image and image.filename:
+                    image_filename = f"{product_id}_{image.filename}"
+                    os.makedirs(os.path.join(UPLOAD_FOLDER, 'products'), exist_ok=True)
+                    image.save(os.path.join(UPLOAD_FOLDER, 'products', image_filename))
+            
+            # Update product
+            update_expr = 'SET #n = :n, description = :desc, price = :p, discount_price = :dp, category_id = :cat, stock_quantity = :sq, is_available = :av, is_vegetarian = :veg, is_bestseller = :bs, image_url = :img'
+            expr_names = {'#n': 'name'}
+            expr_values = {
+                ':n': request.form.get('name'),
+                ':desc': request.form.get('description', ''),
+                ':p': str(float(request.form.get('price', 0))),
+                ':dp': request.form.get('discount_price', ''),
+                ':cat': request.form.get('category_id', ''),
+                ':sq': int(request.form.get('stock_quantity', 0)),
+                ':av': request.form.get('is_available') == 'on',
+                ':veg': request.form.get('is_vegetarian') == 'on',
+                ':bs': request.form.get('is_bestseller') == 'on',
+                ':img': image_filename
+            }
+            
+            products_table.update_item(
+                Key={'product_id': product_id},
+                UpdateExpression=update_expr,
+                ExpressionAttributeNames=expr_names,
+                ExpressionAttributeValues=expr_values
+            )
+            
+            flash('Product updated successfully!', 'success')
+            return redirect(url_for('baker_products'))
+        
+        # GET request - show form
+        cat_response = categories_table.scan(
+            FilterExpression=Attr('bakery_id').eq(bakery['bakery_id'])
+        )
+        bakery_categories = cat_response.get('Items', [])
+        
+    except ClientError as e:
+        print(f"Edit product error: {e}")
+        flash('Error editing product.', 'danger')
+        return redirect(url_for('baker_products'))
+    
+    return render_template('baker/product_form.html',
+                          bakery=bakery,
+                          product=product,
+                          categories=bakery_categories)
+
 @app.route('/baker/orders')
 @login_required
 @baker_required
