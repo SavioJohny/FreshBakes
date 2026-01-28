@@ -27,14 +27,6 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="filter-group">
-                    <select name="sort" class="form-control">
-                        <option value="rating" {% if current_sort=='rating' %}selected{% endif %}>Top Rated</option>
-                        <option value="delivery_time" {% if current_sort=='delivery_time' %}selected{% endif %}>Fastest
-                            Delivery</option>
-                        <option value="name" {% if current_sort=='name' %}selected{% endif %}>Name (A-Z)</option>
-                    </select>
-                </div>
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-filter"></i> Apply
                 </button>
@@ -46,7 +38,8 @@
             {% for bakery in bakeries %}
             <a href="{{ url_for('bakery_detail', slug=bakery.slug) }}" class="bakery-card">
                 <div class="bakery-image">
-                    <img src="{{ url_for('static', filename='images/' ~ bakery.logo_url) }}" alt="{{ bakery.name }}"
+                    <img src="{{ url_for('static', filename='images/bakeries/' ~ (bakery.logo_url or 'default-bakery.png')) }}"
+                        alt="{{ bakery.name }}"
                         onerror="this.src='{{ url_for('static', filename='images/default-bakery.png') }}'">
                     {% if bakery.is_featured %}
                     <span class="badge badge-featured"><i class="fas fa-crown"></i></span>
@@ -57,18 +50,12 @@
                 </div>
                 <div class="bakery-info">
                     <h3>{{ bakery.name }}</h3>
-                    <p class="bakery-description">{{ bakery.description[:80] if bakery.description else 'Fresh baked
-                        goods daily' }}{% if bakery.description and bakery.description|length > 80 %}...{% endif %}</p>
+                    <p class="bakery-description">{{ (bakery.description or 'Fresh baked goods daily')[:80] }}{% if
+                        bakery.description and bakery.description|length > 80 %}...{% endif %}</p>
                     <div class="bakery-meta">
-                        <span class="rating"><i class="fas fa-star"></i> {{ '%.1f'|format(bakery.rating) }} ({{
-                            bakery.total_reviews }})</span>
-                        <span class="delivery"><i class="fas fa-clock"></i> {{ bakery.delivery_time_mins }} mins</span>
-                    </div>
-                    <div class="bakery-footer">
+                        <span class="rating"><i class="fas fa-star"></i> {{ '%.1f'|format(bakery.rating|default(0))
+                            }}</span>
                         <span class="location"><i class="fas fa-map-marker-alt"></i> {{ bakery.city }}</span>
-                        {% if bakery.min_order_amount > 0 %}
-                        <span class="min-order">Min. ₹{{ '%.0f'|format(bakery.min_order_amount) }}</span>
-                        {% endif %}
                     </div>
                 </div>
             </a>
@@ -81,27 +68,6 @@
             </div>
             {% endfor %}
         </div>
-
-        <!-- Pagination -->
-        {% if pagination.pages > 1 %}
-        <nav class="pagination">
-            {% if pagination.has_prev %}
-            <a href="{{ url_for('main.bakeries', page=pagination.prev_num, search=search, city=current_city, sort=current_sort) }}"
-                class="page-link">
-                <i class="fas fa-chevron-left"></i> Previous
-            </a>
-            {% endif %}
-
-            <span class="page-info">Page {{ pagination.page }} of {{ pagination.pages }}</span>
-
-            {% if pagination.has_next %}
-            <a href="{{ url_for('main.bakeries', page=pagination.next_num, search=search, city=current_city, sort=current_sort) }}"
-                class="page-link">
-                Next <i class="fas fa-chevron-right"></i>
-            </a>
-            {% endif %}
-        </nav>
-        {% endif %}
     </div>
 </section>
 {% endblock %}
