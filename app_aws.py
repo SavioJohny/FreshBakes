@@ -911,7 +911,7 @@ def baker_add_product():
         bakery = {}
         bakery_categories = []
     
-    return render_template('baker/add_product.html',
+    return render_template('baker/product_form.html',
                           bakery=bakery,
                           categories=bakery_categories)
 
