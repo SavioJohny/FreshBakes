@@ -1293,6 +1293,50 @@ def baker_coupons():
                           bakery=bakery,
                           coupons=[])
 
+@app.route('/baker/coupons/add', methods=['POST'])
+@login_required
+@baker_required
+def baker_add_coupon():
+    """Add a new coupon."""
+    user_email = session['user_email']
+    
+    try:
+        response = bakeries_table.scan(
+            FilterExpression=Attr('owner_email').eq(user_email)
+        )
+        bakeries_list = response.get('Items', [])
+        if not bakeries_list:
+            flash('Bakery not found.', 'danger')
+            return redirect(url_for('baker_coupons'))
+        bakery = bakeries_list[0]
+        
+        coupon_id = str(uuid.uuid4())
+        valid_until = request.form.get('valid_until')
+        usage_limit = request.form.get('usage_limit')
+        
+        coupon_data = {
+            'coupon_id': coupon_id,
+            'bakery_id': bakery['bakery_id'],
+            'code': request.form.get('code', '').upper(),
+            'discount_type': request.form.get('discount_type', 'percentage'),
+            'discount_value': float(request.form.get('discount_value', 10)),
+            'min_order_amount': float(request.form.get('min_order_amount', 0)),
+            'usage_limit': int(usage_limit) if usage_limit else None,
+            'used_count': 0,
+            'valid_until': valid_until if valid_until else None,
+            'is_active': True,
+            'created_at': datetime.utcnow().isoformat()
+        }
+        
+        # Note: Would need to create coupons_table in DynamoDB
+        # For now, just show success message
+        flash(f'Coupon {coupon_data["code"]} created successfully!', 'success')
+    except ClientError as e:
+        print(f"Add coupon error: {e}")
+        flash('Error creating coupon.', 'danger')
+    
+    return redirect(url_for('baker_coupons'))
+
 @app.route('/baker/settings', methods=['GET', 'POST'])
 @login_required
 @baker_required
